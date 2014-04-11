@@ -493,9 +493,6 @@ public class BuildOffManager extends JavaPlugin {
             ProtectedCuboidRegion pcr2 = new ProtectedCuboidRegion(("plotsmall" + Integer.toString(number)), bv3, bv4);
             pcr1.setPriority(1);
             pcr2.setPriority(1);
-//        DefaultDomain emptydd = new DefaultDomain();
-//        pcr1.setMembers(emptydd);
-//        pcr2.setMembers(emptydd);
             rgm.addRegion(pcr1);
             rgm.addRegion(pcr2);
             rgm.removeRegion(("plot" + Integer.toString(number)) + "small");
