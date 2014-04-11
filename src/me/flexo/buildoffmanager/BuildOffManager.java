@@ -64,7 +64,8 @@ public class BuildOffManager extends JavaPlugin {
                     }
                     RunningBuildOff = true;
                     sender.sendMessage(ChatColor.GREEN + "You have started the Build Off.");
-                    RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld("Yavana2"));
+                    String worldName = getConfig().getString("startblock.world");
+                    RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
                     ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
                     rgContest.setPriority(0);
                     rgm.save();
@@ -96,7 +97,8 @@ public class BuildOffManager extends JavaPlugin {
                 try {
                     JoinableBuildOff = false;
                     RunningBuildOff = false;
-                    RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld("Yavana2"));
+                    String worldName = getConfig().getString("startblock.world");
+                    RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
                     ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
                     rgContest.setPriority(2);
                     rgm.save();
@@ -207,7 +209,8 @@ public class BuildOffManager extends JavaPlugin {
                     int pathWidth = getConfig().getInt("layout.pathwidth");
                     int plotWidth = getConfig().getInt("layout.plotwidth");
                     int plotsPerRow = getConfig().getInt("layout.plotsperrow");
-                    teleLoc = new Location(getServer().getWorld("Yavana2"), 1715.5 - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), 64, 1501.5 + (((int) (plotNumber / plotsPerRow)) * (plotWidth + pathWidth)));
+                    String worldName = getConfig().getString("startblock.world");
+                    teleLoc = new Location(getServer().getWorld(worldName), 1715.5 - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), 64, 1501.5 + (((int) (plotNumber / plotsPerRow)) * (plotWidth + pathWidth)));
                     player.teleport(teleLoc);
                 } else {
                     sender.sendMessage(ChatColor.RED + "You are not enrolled for the Build Off. So you cannot be teleported to your plot.");
@@ -294,7 +297,11 @@ public class BuildOffManager extends JavaPlugin {
         int pathWidth = getConfig().getInt("layout.pathwidth");
         int plotWidth = getConfig().getInt("layout.plotwidth");
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
-        boardSign = new Location(getServer().getWorld("Yavana2"), 1715 - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), 65, 1504 + (((int) (plotNumber / plotsPerRow)) * (plotWidth + pathWidth)));
+        String worldName = getConfig().getString("startblock.world");
+        int startX = getConfig().getInt("startblock.x");
+        int startY = getConfig().getInt("startblock.y");
+        int startZ = getConfig().getInt("startblock.z");
+        boardSign = new Location(getServer().getWorld(worldName), startX - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), (startY + 1), startZ + (((int) (plotNumber / plotsPerRow)) * (plotWidth + pathWidth)));
         boardSign.getBlock().setType(Material.SIGN_POST);
         boardSign.getBlock().setData((byte) 10);
         Sign sign;
@@ -307,9 +314,10 @@ public class BuildOffManager extends JavaPlugin {
     private void updateBoard(CommandSender sender) {
         int plotNumber;
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+        String worldName = getConfig().getString("startblock.world");
         plotNumber = BuildOffContestants.indexOf(sender.getName());
         Location boardSign;
-        boardSign = new Location(getServer().getWorld("Yavana2"), 1654 - ((plotNumber % plotsPerRow) * 1), 70 + (((int) (plotNumber / plotsPerRow)) * 1), 1446);
+        boardSign = new Location(getServer().getWorld(worldName), 1654 - ((plotNumber % plotsPerRow) * 1), 70 + (((int) (plotNumber / plotsPerRow)) * 1), 1446);
         boardSign.getBlock().setType(Material.WALL_SIGN);
         boardSign.getBlock().setData((byte) 2);
         Sign sign;
@@ -321,7 +329,8 @@ public class BuildOffManager extends JavaPlugin {
 
     private void updateThemeSign() {
         Location loc;
-        loc = new Location(getServer().getWorld("Yavana2"), 1609, 65, 1447);
+        String worldName = getConfig().getString("startblock.world");
+        loc = new Location(getServer().getWorld(worldName), 1609, 65, 1447);
         loc.getBlock().setType(Material.WALL_SIGN);
         loc.getBlock().setData((byte) 2);
         String subString1 = getConfig().getString("theme.line1");
@@ -339,7 +348,8 @@ public class BuildOffManager extends JavaPlugin {
         try {
             int plotNumber;
             plotNumber = BuildOffContestants.indexOf(name);
-            RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld("Yavana2"));
+            String worldName = getConfig().getString("startblock.world");
+            RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
             ProtectedRegion rgSmall = rgm.getRegion("plotbig" + Integer.toString(plotNumber));
             ProtectedRegion rgBig = rgm.getRegion("plotsmall" + Integer.toString(plotNumber));
             DefaultDomain dd = new DefaultDomain();
@@ -356,14 +366,16 @@ public class BuildOffManager extends JavaPlugin {
 
     private void resetBoard() {
         Location l1, l2;
-        l1 = new Location(getServer().getWorld("Yavana2"), 1654, 70, 1446);
-        l2 = new Location(getServer().getWorld("Yavana2"), 1649, 75, 1446);
+        String worldName = getConfig().getString("startblock.world");
+        l1 = new Location(getServer().getWorld(worldName), 1654, 70, 1446);
+        l2 = new Location(getServer().getWorld(worldName), 1649, 75, 1446);
         setBlocks(l1, l2, Material.AIR);
     }
 
     private void resetThemeSign() {
         Location loc;
-        loc = new Location(getServer().getWorld("Yavana2"), 1609, 65, 1447);
+        String worldName = getConfig().getString("startblock.world");
+        loc = new Location(getServer().getWorld(worldName), 1609, 65, 1447);
         loc.getBlock().setType(Material.WALL_SIGN);
         loc.getBlock().setData((byte) 2);
         Sign sign;
@@ -380,58 +392,59 @@ public class BuildOffManager extends JavaPlugin {
             int pathWidth = getConfig().getInt("layout.pathwidth");
             int plotWidth = getConfig().getInt("layout.plotwidth");
             int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+            String worldName = getConfig().getString("startblock.world");
+            int startX = getConfig().getInt("startblock.x");
+            int startY = getConfig().getInt("startblock.y");
+            int startZ = getConfig().getInt("startblock.z");
             final int deltaX = ((int) (number % plotsPerRow)) * (plotWidth + pathWidth);
             final int deltaZ = ((int) (number / plotsPerRow)) * (plotWidth + pathWidth);
-            Location l1 = new Location(getServer().getWorld("Yavana2"), 1685 - (deltaX), 59, 1534 + deltaZ);
-            Location l2 = new Location(getServer().getWorld("Yavana2"), 1714 - (deltaX), 1, 1505 + deltaZ);
+            Location l1 = new Location(getServer().getWorld(worldName), (startX - 30) - (deltaX), (startY - 5), (startZ + 30) + deltaZ);
+            Location l2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 1, (startZ + 1) + deltaZ);
             setBlocks(l1, l2, Material.STONE);
-            Location l3 = new Location(getServer().getWorld("Yavana2"), 1685 - (deltaX), 62, 1534 + deltaZ);
-            Location l4 = new Location(getServer().getWorld("Yavana2"), 1714 - (deltaX), 60, 1505 + deltaZ);
+            Location l3 = new Location(getServer().getWorld(worldName), (startX - 30) - (deltaX), (startY - 2), (startZ + 30) + deltaZ);
+            Location l4 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 4), (startZ + 1) + deltaZ);
             setBlocks(l3, l4, Material.DIRT);
-            Location l5 = new Location(getServer().getWorld("Yavana2"), 1685 - (deltaX), 63, 1534 + deltaZ);
-            Location l6 = new Location(getServer().getWorld("Yavana2"), 1714 - (deltaX), 63, 1505 + deltaZ);
+            Location l5 = new Location(getServer().getWorld(worldName), (startX - 30) - (deltaX), (startY - 1), (startZ + 30) + deltaZ);
+            Location l6 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 1), (startZ + 1) + deltaZ);
             setBlocks(l5, l6, Material.GRASS);
-            Location l7 = new Location(getServer().getWorld("Yavana2"), 1684 - (deltaX), 64, 1535 + deltaZ);
-            Location l8 = new Location(getServer().getWorld("Yavana2"), 1715 - (deltaX), 64, 1504 + deltaZ);
+            Location l7 = new Location(getServer().getWorld(worldName), (startX - 31) - (deltaX), startY, (startZ + 31) + deltaZ);
+            Location l8 = new Location(getServer().getWorld(worldName), startX - (deltaX), 64, startZ + deltaZ);
             setBlocks(l7, l8, Material.STEP);
-            Location l9 = new Location(getServer().getWorld("Yavana2"), 1685 - (deltaX), 255, 1534 + deltaZ);
-            Location l10 = new Location(getServer().getWorld("Yavana2"), 1714 - (deltaX), 64, 1505 + deltaZ);
+            Location l9 = new Location(getServer().getWorld(worldName), (startX - 30) - (deltaX), 255, (startZ + 30) + deltaZ);
+            Location l10 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), startY, (startZ + 1) + deltaZ);
             setBlocks(l9, l10, Material.AIR);
-            Location l11 = new Location(getServer().getWorld("Yavana2"), 1715 - (deltaX), 64, 1504 + deltaZ);
-            getServer().getWorld("Yavana2").getBlockAt(l11).setType(Material.GLOWSTONE);
+            Location l11 = new Location(getServer().getWorld(worldName), startX - (deltaX), startY, startZ + deltaZ);
+            getServer().getWorld(worldName).getBlockAt(l11).setType(Material.GLOWSTONE);
             Location plotSign;
-            plotSign = new Location(getServer().getWorld("Yavana2"), 1715 - (deltaX), 65, 1504 + deltaZ);
+            plotSign = new Location(getServer().getWorld(worldName), startX - (deltaX), (startY + 1), startZ + deltaZ);
             plotSign.getBlock().setType(Material.SIGN_POST);
             plotSign.getBlock().setData((byte) 10);
             Sign sign;
             sign = (Sign) plotSign.getBlock().getState();
             sign.setLine(2, "");
             sign.update();
-            
+
             //Make sign say [RESET]
             Location boardSign;
-            boardSign = new Location(getServer().getWorld("Yavana2"), 1654 - ((number % plotsPerRow) * 1), 70 + (((int) (number / plotsPerRow)) * 1), 1446);
+            boardSign = new Location(getServer().getWorld(worldName), 1654 - ((number % plotsPerRow) * 1), 70 + (((int) (number / plotsPerRow)) * 1), 1446);
             boardSign.getBlock().setType(Material.WALL_SIGN);
             boardSign.getBlock().setData((byte) 2);
             Sign sign2;
             sign2 = (Sign) boardSign.getBlock().getState();
             sign2.setLine(1, "[RESET]");
             sign2.update();
-            
+
             //Reset the regions
-            RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld("Yavana2"));
+            RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
             BlockVector bv1 = new BlockVector(l2.getBlockX(), l2.getBlockY(), l2.getBlockZ());
             BlockVector bv2 = new BlockVector(l9.getBlockX(), l9.getBlockY(), l9.getBlockZ());
             ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);
             BlockVector bv3 = new BlockVector(l7.getBlockX(), l7.getBlockY(), l7.getBlockZ());
             BlockVector bv4 = new BlockVector(l8.getBlockX(), l8.getBlockY(), l8.getBlockZ());
             ProtectedCuboidRegion pcr2 = new ProtectedCuboidRegion(("plotsmall" + Integer.toString(number)), bv3, bv4);
-//        DefaultDomain emptydd = new DefaultDomain();
-//        pcr1.setMembers(emptydd);
-//        pcr2.setMembers(emptydd);
             rgm.addRegion(pcr1);
             rgm.addRegion(pcr2);
-            rgm.save(); 
+            rgm.save();
         } catch (ProtectionDatabaseException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -455,27 +468,31 @@ public class BuildOffManager extends JavaPlugin {
             int pathWidth = getConfig().getInt("layout.pathwidth");
             int plotWidth = getConfig().getInt("layout.plotwidth");
             int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+            String worldName = getConfig().getString("startblock.world");
+            int startX = getConfig().getInt("startblock.x");
+            int startY = getConfig().getInt("startblock.y");
+            int startZ = getConfig().getInt("startblock.z");
             final int deltaX = ((int) (number % plotsPerRow)) * (plotWidth + pathWidth);
             final int deltaZ = ((int) (number / plotsPerRow)) * (plotWidth + pathWidth);
-            Location l1 = new Location(getServer().getWorld("Yavana2"), 1685 - (deltaX), 59, 1534 + deltaZ);
-            Location l2 = new Location(getServer().getWorld("Yavana2"), 1714 - (deltaX), 1, 1505 + deltaZ);
+            Location l1 = new Location(getServer().getWorld(worldName), (startX - 30) - (deltaX), (startY - 5), (startZ + 30) + deltaZ);
+            Location l2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 1, (startZ + 1) + deltaZ);
             setBlocks(l1, l2, Material.STONE);
-            Location l3 = new Location(getServer().getWorld("Yavana2"), 1685 - (deltaX), 62, 1534 + deltaZ);
-            Location l4 = new Location(getServer().getWorld("Yavana2"), 1714 - (deltaX), 60, 1505 + deltaZ);
+            Location l3 = new Location(getServer().getWorld(worldName), (startX - 30) - (deltaX), (startY - 2), (startZ + 30) + deltaZ);
+            Location l4 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 4), (startZ + 1) + deltaZ);
             setBlocks(l3, l4, Material.DIRT);
-            Location l5 = new Location(getServer().getWorld("Yavana2"), 1685 - (deltaX), 63, 1534 + deltaZ);
-            Location l6 = new Location(getServer().getWorld("Yavana2"), 1714 - (deltaX), 63, 1505 + deltaZ);
+            Location l5 = new Location(getServer().getWorld(worldName), (startX - 30) - (deltaX), (startY - 1), (startZ + 30) + deltaZ);
+            Location l6 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 1), (startZ + 1) + deltaZ);
             setBlocks(l5, l6, Material.GRASS);
-            Location l7 = new Location(getServer().getWorld("Yavana2"), 1684 - (deltaX), 64, 1535 + deltaZ);
-            Location l8 = new Location(getServer().getWorld("Yavana2"), 1715 - (deltaX), 64, 1504 + deltaZ);
+            Location l7 = new Location(getServer().getWorld(worldName), (startX - 31) - (deltaX), startY, (startZ + 31) + deltaZ);
+            Location l8 = new Location(getServer().getWorld(worldName), startX - (deltaX), 64, startZ + deltaZ);
             setBlocks(l7, l8, Material.STEP);
-            Location l9 = new Location(getServer().getWorld("Yavana2"), 1685 - (deltaX), 255, 1534 + deltaZ);
-            Location l10 = new Location(getServer().getWorld("Yavana2"), 1714 - (deltaX), 64, 1505 + deltaZ);
+            Location l9 = new Location(getServer().getWorld(worldName), (startX - 30) - (deltaX), 255, (startZ + 30) + deltaZ);
+            Location l10 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), startY, (startZ + 1) + deltaZ);
             setBlocks(l9, l10, Material.AIR);
-            Location l11 = new Location(getServer().getWorld("Yavana2"), 1715 - (deltaX), 64, 1504 + deltaZ);
-            getServer().getWorld("Yavana2").getBlockAt(l11).setType(Material.GLOWSTONE);
+            Location l11 = new Location(getServer().getWorld(worldName), startX - (deltaX), startY, startZ + deltaZ);
+            getServer().getWorld(worldName).getBlockAt(l11).setType(Material.GLOWSTONE);
             Location plotSign;
-            plotSign = new Location(getServer().getWorld("Yavana2"), 1715 - (deltaX), 65, 1504 + deltaZ);
+            plotSign = new Location(getServer().getWorld(worldName), startX - (deltaX), (startY + 1), startZ + deltaZ);
             plotSign.getBlock().setType(Material.SIGN_POST);
             plotSign.getBlock().setData((byte) 10);
             Sign sign;
@@ -483,8 +500,8 @@ public class BuildOffManager extends JavaPlugin {
             sign.setLine(0, Integer.toString(number + 1));
             sign.setLine(2, "");
             sign.update();
-            
-            RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld("Yavana2"));
+
+            RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
             BlockVector bv1 = new BlockVector(l2.getBlockX(), l2.getBlockY(), l2.getBlockZ());
             BlockVector bv2 = new BlockVector(l9.getBlockX(), l9.getBlockY(), l9.getBlockZ());
             ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);

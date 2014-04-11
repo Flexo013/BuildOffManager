@@ -10,4 +10,9 @@ layout:
   plotwidth: 32
   pathwidth: 4
   plotsperrow: 6
+startblock:
+  world: Yavana2
+  x: 1715
+  y: 64
+  z: 1504
 contestants: 
