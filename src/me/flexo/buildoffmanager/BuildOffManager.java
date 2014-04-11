@@ -517,8 +517,6 @@ public class BuildOffManager extends JavaPlugin {
             pcr2.setPriority(1);
             rgm.addRegion(pcr1);
             rgm.addRegion(pcr2);
-            rgm.removeRegion(("plot" + Integer.toString(number)) + "small");
-            rgm.removeRegion(("plot" + Integer.toString(number)) + "big");
             rgm.save();
         } catch (ProtectionDatabaseException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
