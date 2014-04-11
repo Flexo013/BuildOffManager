@@ -1,0 +1,13 @@
+theme: 
+  line1: Cat
+  line2: Houses
+streamlink: http://www.YouTube.com/Flexo013
+buildoff:
+  joinable: false
+  running: false
+  maxcontestants: 36
+layout:
+  plotwidth: 32
+  pathwidth: 4
+  plotsperrow: 6
+contestants: 
