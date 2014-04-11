@@ -7,10 +7,12 @@ buildoff:
   running: false
   maxcontestants: 36
 layout:
+  #plotwidth is counted including the stone slab borders
   plotwidth: 32
   pathwidth: 4
   plotsperrow: 6
 startblock:
+  #These are the worldname and coordinates of the glowstone block of the first plot
   world: Yavana2
   x: 1715
   y: 64
