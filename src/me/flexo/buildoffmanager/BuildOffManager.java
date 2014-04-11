@@ -174,7 +174,7 @@ public class BuildOffManager extends JavaPlugin {
                 sender.sendMessage("The /join command can only be used by players.");
             } else {
                 if (JoinableBuildOff) {
-                    if ((int) BuildOffContestants.size() < getConfig().getInt("buildoff.maxcontestants")) {
+                    if (BuildOffContestants.size() < getConfig().getInt("buildoff.maxcontestants")) {
                         joinBuildOff(sender);
                     } else {
                         sender.sendMessage(ChatColor.RED + "The Build Off Area is currently full. Contact an operator to join the Build Off. We are sorry for the inconvenience.");
@@ -213,7 +213,7 @@ public class BuildOffManager extends JavaPlugin {
                     int startX = getConfig().getInt("startblock.x");
                     int startY = getConfig().getInt("startblock.y");
                     int startZ = getConfig().getInt("startblock.z");
-                    teleLoc = new Location(getServer().getWorld(worldName), (startX + 0.5) - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), startY, (startZ - 2.5) + (((int) (plotNumber / plotsPerRow)) * (plotWidth + pathWidth)));
+                    teleLoc = new Location(getServer().getWorld(worldName), (startX + 0.5) - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), startY, (startZ - 2.5) + ((plotNumber / plotsPerRow) * (plotWidth + pathWidth)));
                     player.teleport(teleLoc);
                 } else {
                     sender.sendMessage(ChatColor.RED + "You are not enrolled for the Build Off. So you cannot be teleported to your plot.");
@@ -304,7 +304,7 @@ public class BuildOffManager extends JavaPlugin {
         int startX = getConfig().getInt("startblock.x");
         int startY = getConfig().getInt("startblock.y");
         int startZ = getConfig().getInt("startblock.z");
-        boardSign = new Location(getServer().getWorld(worldName), startX - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), (startY + 1), startZ + (((int) (plotNumber / plotsPerRow)) * (plotWidth + pathWidth)));
+        boardSign = new Location(getServer().getWorld(worldName), startX - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), (startY + 1), startZ + ((plotNumber / plotsPerRow) * (plotWidth + pathWidth)));
         boardSign.getBlock().setType(Material.SIGN_POST);
         boardSign.getBlock().setData((byte) 10);
         Sign sign;
@@ -320,7 +320,7 @@ public class BuildOffManager extends JavaPlugin {
         String worldName = getConfig().getString("startblock.world");
         plotNumber = BuildOffContestants.indexOf(sender.getName());
         Location boardSign;
-        boardSign = new Location(getServer().getWorld(worldName), 1654 - ((plotNumber % plotsPerRow) * 1), 70 + (((int) (plotNumber / plotsPerRow)) * 1), 1446);
+        boardSign = new Location(getServer().getWorld(worldName), 1654 - ((plotNumber % plotsPerRow) * 1), 70 + ((plotNumber / plotsPerRow) * 1), 1446);
         boardSign.getBlock().setType(Material.WALL_SIGN);
         boardSign.getBlock().setData((byte) 2);
         Sign sign;
@@ -399,8 +399,8 @@ public class BuildOffManager extends JavaPlugin {
             int startX = getConfig().getInt("startblock.x");
             int startY = getConfig().getInt("startblock.y");
             int startZ = getConfig().getInt("startblock.z");
-            final int deltaX = ((int) (number % plotsPerRow)) * (plotWidth + pathWidth);
-            final int deltaZ = ((int) (number / plotsPerRow)) * (plotWidth + pathWidth);
+            final int deltaX = (number % plotsPerRow) * (plotWidth + pathWidth);
+            final int deltaZ = (number / plotsPerRow) * (plotWidth + pathWidth);
             final int deltaPlot = plotWidth - 2;
             Location l1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 5), (startZ + deltaPlot) + deltaZ);
             Location l2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 1, (startZ + 1) + deltaZ);
@@ -425,12 +425,13 @@ public class BuildOffManager extends JavaPlugin {
             plotSign.getBlock().setData((byte) 10);
             Sign sign;
             sign = (Sign) plotSign.getBlock().getState();
+            sign.setLine(0, Integer.toString(number + 1));
             sign.setLine(2, "");
             sign.update();
 
             //Make sign say [RESET]
             Location boardSign;
-            boardSign = new Location(getServer().getWorld(worldName), 1654 - ((number % plotsPerRow) * 1), 70 + (((int) (number / plotsPerRow)) * 1), 1446);
+            boardSign = new Location(getServer().getWorld(worldName), 1654 - ((number % plotsPerRow) * 1), 70 + ((number / plotsPerRow) * 1), 1446);
             boardSign.getBlock().setType(Material.WALL_SIGN);
             boardSign.getBlock().setData((byte) 2);
             Sign sign2;
@@ -446,6 +447,8 @@ public class BuildOffManager extends JavaPlugin {
             BlockVector bv3 = new BlockVector(l7.getBlockX(), l7.getBlockY(), l7.getBlockZ());
             BlockVector bv4 = new BlockVector(l8.getBlockX(), l8.getBlockY(), l8.getBlockZ());
             ProtectedCuboidRegion pcr2 = new ProtectedCuboidRegion(("plotsmall" + Integer.toString(number)), bv3, bv4);
+            pcr1.setPriority(1);
+            pcr2.setPriority(1);
             rgm.addRegion(pcr1);
             rgm.addRegion(pcr2);
             rgm.save();
@@ -476,8 +479,8 @@ public class BuildOffManager extends JavaPlugin {
             int startX = getConfig().getInt("startblock.x");
             int startY = getConfig().getInt("startblock.y");
             int startZ = getConfig().getInt("startblock.z");
-            final int deltaX = ((int) (number % plotsPerRow)) * (plotWidth + pathWidth);
-            final int deltaZ = ((int) (number / plotsPerRow)) * (plotWidth + pathWidth);
+            final int deltaX = (number % plotsPerRow) * (plotWidth + pathWidth);
+            final int deltaZ = (number / plotsPerRow) * (plotWidth + pathWidth);
             final int deltaPlot = plotWidth - 2;
             Location l1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 5), (startZ + deltaPlot) + deltaZ);
             Location l2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 1, (startZ + 1) + deltaZ);
