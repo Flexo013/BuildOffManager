@@ -10,64 +10,51 @@ commands:
     description: Join the current Build Off.
     usage: §cThe correct format is /join
     permission: buildoffmanager.default
-    permission-message: §cYou don't have buildoffmanager.default
   leave:
     description: Leave the current Build Off.
     usage: §cThe correct format is /leave
     permission: buildoffmanager.default
-    permission-message: §cYou don't have buildoffmanager.default
   tpplot:
     description: Teleport the player to his plot.
     usage: §cThe correct format is /tpplot
     permission: buildoffmanager.default
-    permission-message: §cYou don't have buildoffmanager.default
   theme:
     description: Displays the theme of the current Build Off.
     usage: §cThe correct format is /theme
     permission: buildoffmanager.default
-    permission-message: §cYou don't have buildoffmanager.default
   settheme:
     description: Changes the theme of theme line [theme_line_number] Build Off to [new_theme].
     usage: §cThe correct format is /settheme [theme_line_number] [new_theme]
     permission: buildoffmanager.op
-    permission-message: §cYou don't have buildoffmanager.op
   setstreamlink:
     description: Changes the stream link of the Build Off to [new_stream_link].
     usage: §cThe correct format is /setstreamlink [new_stream_link]
     permission: buildoffmanager.op
-    permission-message: §cYou don't have buildoffmanager.op
   openbuildoff:
     description: Open a new Build Off.
     usage: §cThe correct format is /openbuildoff
     permission: buildoffmanager.op
-    permission-message: §cYou don't have buildoffmanager.op  
   startbuildoff:
     description: Start a new Build Off.
     usage: §cThe correct format is /startbuildoff
     permission: buildoffmanager.op
-    permission-message: §cYou don't have buildoffmanager.op
   endbuildoff:
     description: End the current Build Off.
     usage: §cThe correct format is /endbuildoff
     permission: buildoffmanager.op
-    permission-message: §cYou don't have buildoffmanager.op
   resetbuildoff:
     description: Resets the Build Off area and contestant list.
     usage: §cThe correct format is /resetbuildoff
     permission: buildoffmanager.op
-    permission-message: §cYou don't have buildoffmanager.op
   resetplot:
     description: Regenerates one specific plot.
     usage: §cThe correct format is /resetplot [plot_number]
     permission: buildoffmanager.op
-    permission-message: §cYou don't have buildoffmanager.op
   listplayers:
     description: List all players from the contestant list.
     usage: §cThe correct format is /listplayers
     permission: buildoffmanager.listplayers
-    permission-message: §cYou don't have buildoffmanager.listplayers
   bominit:
     description: Initializes Build Off plots.
     usage: §cThe correct format is /bominit
     permission: buildoffmanager.op
-    permission-message: §cYou don't have buildoffmanager.op
