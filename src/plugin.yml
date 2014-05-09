@@ -23,8 +23,8 @@ commands:
     usage: §cThe correct format is /theme
     permission: buildoffmanager.default
   settheme:
-    description: Changes the theme of theme line [theme_line_number] Build Off to [new_theme].
-    usage: §cThe correct format is /settheme [theme_line_number] [new_theme]
+    description: Changes the theme of the Build Off to [new_theme].
+    usage: §cThe correct format is /settheme [new_theme]
     permission: buildoffmanager.op
   setstreamlink:
     description: Changes the stream link of the Build Off to [new_stream_link].
