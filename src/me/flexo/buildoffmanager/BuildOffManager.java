@@ -30,6 +30,7 @@ public class BuildOffManager extends JavaPlugin {
     public ArrayList<String> BuildOffContestants = new ArrayList<>();
     public boolean JoinableBuildOff = false;
     public boolean RunningBuildOff = false;
+    public boolean AfterBuildOff = false;
 
     @Override
     public void onEnable() {
@@ -38,6 +39,7 @@ public class BuildOffManager extends JavaPlugin {
         BuildOffContestants = (ArrayList) getConfig().getStringList("contestants");
         JoinableBuildOff = getConfig().getBoolean("buildoff.joinable");
         RunningBuildOff = getConfig().getBoolean("buildoff.running");
+        AfterBuildOff = getConfig().getBoolean("buildoff.after");
         log.info("[BuildOffManager] Build Off configuration loaded.");
         PluginManager pm = getServer().getPluginManager();
     }
@@ -47,6 +49,7 @@ public class BuildOffManager extends JavaPlugin {
         getConfig().set("contestants", BuildOffContestants);
         getConfig().set("buildoff.joinable", JoinableBuildOff);
         getConfig().set("buildoff.running", RunningBuildOff);
+        getConfig().set("buildoff.after", AfterBuildOff);
         saveConfig();
     }
 
@@ -97,6 +100,7 @@ public class BuildOffManager extends JavaPlugin {
                 try {
                     JoinableBuildOff = false;
                     RunningBuildOff = false;
+                    AfterBuildOff = true;
                     String worldName = getConfig().getString("startblock.world");
                     RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
                     ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
@@ -118,6 +122,7 @@ public class BuildOffManager extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED + "You can not reset the Build Off area right now.");
             } else {
                 sender.sendMessage(ChatColor.GREEN + "You just reset the Build Off area. You should be proud of yourself!");
+                AfterBuildOff = false;
                 resetThemeSign();
                 for (String playerName : BuildOffContestants) {
                     int plotNumber;
@@ -173,6 +178,10 @@ public class BuildOffManager extends JavaPlugin {
             if (!(sender instanceof Player)) {
                 sender.sendMessage("The /join command can only be used by players.");
             } else {
+                if (AfterBuildOff){
+                    sender.sendMessage(ChatColor.RED + "The Build Off has ended. You cannot join anymore.");
+                    return false;
+                }
                 if (JoinableBuildOff) {
                     if (BuildOffContestants.size() < getConfig().getInt("buildoff.maxcontestants")) {
                         joinBuildOff(sender);
@@ -180,7 +189,7 @@ public class BuildOffManager extends JavaPlugin {
                         sender.sendMessage(ChatColor.RED + "The Build Off Area is currently full. Contact an operator to join the Build Off. We are sorry for the inconvenience.");
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You cannot join a Build Off at this time.");
+                    sender.sendMessage(ChatColor.RED + "The enrollments for the Build Off have not opened yet.");
                 }
             }
             return true;
@@ -225,7 +234,7 @@ public class BuildOffManager extends JavaPlugin {
         //Tells a player the theme
         if (cmd.getName().equalsIgnoreCase("theme")) {
             if (RunningBuildOff) {
-                sender.sendMessage(ChatColor.GOLD + "The theme is: " + ChatColor.BLUE + getConfig().getString("theme.line1") + " " + getConfig().getString("theme.line2"));
+                sender.sendMessage(ChatColor.GOLD + "The theme is: " + ChatColor.BLUE + getConfig().getString("theme"));
             } else {
                 sender.sendMessage(ChatColor.RED + "You can not see the theme, if there is no Build Off running.");
             }
@@ -234,22 +243,12 @@ public class BuildOffManager extends JavaPlugin {
 
         //Changes the Build Off Theme in the config.yml
         if (cmd.getName().equalsIgnoreCase("settheme")) {
-            if (!(args.length == 2)) {
-                System.out.println("meow");
+            if (!(args.length == 1)) {
                 return false;
             } else {
-                if (!args[0].equals("1") || !args[0].equals("2")) {
-                    return false;
-                } else {
-                    if (args[0].equals("1")) {
-                        getConfig().set("theme.line1", args[1]);
-                        sender.sendMessage(ChatColor.GREEN + "You succesfully changed Themeline1 to: " + ChatColor.BLUE + getConfig().getString("theme.line1"));
-                    } else if (args[0].equals("2")) {
-                        getConfig().set("theme.line2", args[1]);
-                        sender.sendMessage(ChatColor.GREEN + "You succesfully changed Themeline2 to: " + ChatColor.BLUE + getConfig().getString("theme.line2"));
-                    }
-                    saveConfig();
-                }
+                getConfig().set("theme", args[0]);
+                sender.sendMessage(ChatColor.GREEN + "You succesfully changed the theme to: " + ChatColor.BLUE + args[0]);
+                saveConfig();
             }
             return true;
         }
@@ -261,17 +260,17 @@ public class BuildOffManager extends JavaPlugin {
             } else {
                 getConfig().set("streamlink", args[0]);
                 saveConfig();
-                sender.sendMessage(ChatColor.GREEN + "You succesfully changed the stream link to: " + ChatColor.BLUE + getConfig().getString("streamlink"));
+                sender.sendMessage(ChatColor.GREEN + "You succesfully changed the stream link to: " + ChatColor.BLUE + args[0]);
             }
             return true;
         }
 
         if (cmd.getName().equalsIgnoreCase("bominit")) {
-            int max = getConfig().getInt("buildoff.maxcontestants");
+            int max = getConfig().getInt(ChatColor.GREEN + "buildoff.maxcontestants");
             for (int i = 0; i < max; i++) {
                 initializePlots(i);
             }
-            sender.sendMessage("Done YaY");
+            sender.sendMessage("Done Yay");
             return true;
         }
         return false;
@@ -336,13 +335,12 @@ public class BuildOffManager extends JavaPlugin {
         loc = new Location(getServer().getWorld(worldName), 1609, 65, 1447);
         loc.getBlock().setType(Material.WALL_SIGN);
         loc.getBlock().setData((byte) 2);
-        String subString1 = getConfig().getString("theme.line1");
-        String subString2 = getConfig().getString("theme.line2");
+        String subString1 = getConfig().getString("theme");
         Sign sign;
         sign = (Sign) loc.getBlock().getState();
         sign.setLine(0, "=-=-=-=-=-=-=-=");
         sign.setLine(1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + subString1);
-        sign.setLine(2, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + subString2);
+        sign.setLine(2, ChatColor.DARK_AQUA + "");
         sign.setLine(3, "=-=-=-=-=-=-=-=");
         sign.update();
     }

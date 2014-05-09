@@ -1,10 +1,9 @@
-theme: 
-  line1: Cat
-  line2: Houses
+theme: Cats
 streamlink: http://www.YouTube.com/Flexo013
 buildoff:
   joinable: false
   running: false
+  after: false
   maxcontestants: 36
 layout:
   #plotwidth is counted including the stone slab borders
