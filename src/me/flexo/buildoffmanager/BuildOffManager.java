@@ -111,7 +111,7 @@ public class BuildOffManager extends JavaPlugin {
                     Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                sender.sendMessage(ChatColor.RED + "There is no Build Off that you can end.");
+                sender.sendMessage(ChatColor.RED + "There is no Build Off running that you can end.");
             }
             return true;
         }
@@ -178,11 +178,9 @@ public class BuildOffManager extends JavaPlugin {
             if (!(sender instanceof Player)) {
                 sender.sendMessage("The /join command can only be used by players.");
             } else {
-                if (AfterBuildOff){
+                if (AfterBuildOff) {
                     sender.sendMessage(ChatColor.RED + "The Build Off has ended. You cannot join anymore.");
-                    return false;
-                }
-                if (JoinableBuildOff) {
+                } else if (JoinableBuildOff) {
                     if (BuildOffContestants.size() < getConfig().getInt("buildoff.maxcontestants")) {
                         joinBuildOff(sender);
                     } else {
@@ -335,13 +333,12 @@ public class BuildOffManager extends JavaPlugin {
         loc = new Location(getServer().getWorld(worldName), 1609, 65, 1447);
         loc.getBlock().setType(Material.WALL_SIGN);
         loc.getBlock().setData((byte) 2);
-        String subString1 = getConfig().getString("theme.line1");
-        String subString2 = getConfig().getString("theme.line2");
+        String subString1 = getConfig().getString("theme");
         Sign sign;
         sign = (Sign) loc.getBlock().getState();
         sign.setLine(0, "=-=-=-=-=-=-=-=");
         sign.setLine(1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + subString1);
-        sign.setLine(2, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + subString2);
+        sign.setLine(2, ChatColor.DARK_AQUA + "");
         sign.setLine(3, "=-=-=-=-=-=-=-=");
         sign.update();
     }
