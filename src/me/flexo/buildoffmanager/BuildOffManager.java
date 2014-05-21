@@ -111,7 +111,7 @@ public class BuildOffManager extends JavaPlugin {
                     Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                sender.sendMessage(ChatColor.RED + "There is no Build Off that you can end.");
+                sender.sendMessage(ChatColor.RED + "There is no Build Off running that you can end.");
             }
             return true;
         }
@@ -178,11 +178,9 @@ public class BuildOffManager extends JavaPlugin {
             if (!(sender instanceof Player)) {
                 sender.sendMessage("The /join command can only be used by players.");
             } else {
-                if (AfterBuildOff){
+                if (AfterBuildOff) {
                     sender.sendMessage(ChatColor.RED + "The Build Off has ended. You cannot join anymore.");
-                    return false;
-                }
-                if (JoinableBuildOff) {
+                } else if (JoinableBuildOff) {
                     if (BuildOffContestants.size() < getConfig().getInt("buildoff.maxcontestants")) {
                         joinBuildOff(sender);
                     } else {
