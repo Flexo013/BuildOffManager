@@ -264,11 +264,12 @@ public class BuildOffManager extends JavaPlugin {
         }
 
         if (cmd.getName().equalsIgnoreCase("bominit")) {
-            int max = getConfig().getInt(ChatColor.GREEN + "buildoff.maxcontestants");
+            int max = getConfig().getInt("buildoff.maxcontestants");
             for (int i = 0; i < max; i++) {
                 initializePlots(i);
             }
-            sender.sendMessage("Done Yay");
+            createCompleteRegion();
+            sender.sendMessage(ChatColor.GREEN + "Initializing Build Off complete!");
             return true;
         }
         return false;
@@ -512,10 +513,32 @@ public class BuildOffManager extends JavaPlugin {
             BlockVector bv3 = new BlockVector(l7.getBlockX(), l7.getBlockY(), l7.getBlockZ());
             BlockVector bv4 = new BlockVector(l8.getBlockX(), l8.getBlockY(), l8.getBlockZ());
             ProtectedCuboidRegion pcr2 = new ProtectedCuboidRegion(("plotsmall" + Integer.toString(number)), bv3, bv4);
+
             pcr1.setPriority(1);
             pcr2.setPriority(1);
             rgm.addRegion(pcr1);
             rgm.addRegion(pcr2);
+            rgm.save();
+        } catch (ProtectionDatabaseException ex) {
+            Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void createCompleteRegion() {
+        int pathWidth = getConfig().getInt("layout.pathwidth");
+        int plotWidth = getConfig().getInt("layout.plotwidth");
+        int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+        String worldName = getConfig().getString("startblock.world");
+        int startX = getConfig().getInt("startblock.x");
+        int startZ = getConfig().getInt("startblock.z");
+        RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
+        BlockVector bv5 = new BlockVector(startX, 0, startZ);
+        int sizetemp = (plotsPerRow * plotWidth) + ((plotsPerRow - 1) * pathWidth) - 1;
+        BlockVector bv6 = new BlockVector((startX + sizetemp), 255, startZ + sizetemp);
+        ProtectedCuboidRegion pcr3 = new ProtectedCuboidRegion("contestcomplete", bv5, bv6);
+        pcr3.setPriority(0);
+        rgm.addRegion(pcr3);
+        try {
             rgm.save();
         } catch (ProtectionDatabaseException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
