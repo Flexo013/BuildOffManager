@@ -534,7 +534,7 @@ public class BuildOffManager extends JavaPlugin {
         RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
         BlockVector bv5 = new BlockVector(startX, 0, startZ);
         int sizetemp = (plotsPerRow * plotWidth) + ((plotsPerRow - 1) * pathWidth) - 1;
-        BlockVector bv6 = new BlockVector((startX + sizetemp), 255, startZ + sizetemp);
+        BlockVector bv6 = new BlockVector((startX - sizetemp), 255, startZ + sizetemp);
         ProtectedCuboidRegion pcr3 = new ProtectedCuboidRegion("contestcomplete", bv5, bv6);
         pcr3.setPriority(0);
         rgm.addRegion(pcr3);
