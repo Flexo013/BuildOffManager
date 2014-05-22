@@ -4,6 +4,8 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -72,7 +74,7 @@ public class BuildOffManager extends JavaPlugin {
                     ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
                     rgContest.setPriority(0);
                     rgm.save();
-                    getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has started! You will have 24 hours to complete your build. The theme is: " + ChatColor.BLUE + ChatColor.BOLD + getConfig().getString("theme.line1") + " " + getConfig().getString("theme.line2"));
+                    getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has started! You will have 24 hours to complete your build. The theme is: " + ChatColor.BLUE + ChatColor.BOLD + getConfig().getString("theme"));
                     updateThemeSign();
                     //Add start of broadcasting here
                 } catch (ProtectionDatabaseException ex) {
@@ -265,6 +267,9 @@ public class BuildOffManager extends JavaPlugin {
 
         if (cmd.getName().equalsIgnoreCase("bominit")) {
             int max = getConfig().getInt(ChatColor.GREEN + "buildoff.maxcontestants");
+            if (max == 0) {
+                max = 36;
+            }
             for (int i = 0; i < max; i++) {
                 initializePlots(i);
             }
@@ -513,7 +518,6 @@ public class BuildOffManager extends JavaPlugin {
             BlockVector bv3 = new BlockVector(l7.getBlockX(), l7.getBlockY(), l7.getBlockZ());
             BlockVector bv4 = new BlockVector(l8.getBlockX(), l8.getBlockY(), l8.getBlockZ());
             ProtectedCuboidRegion pcr2 = new ProtectedCuboidRegion(("plotsmall" + Integer.toString(number)), bv3, bv4);
-
             pcr1.setPriority(1);
             pcr2.setPriority(1);
             rgm.addRegion(pcr1);
@@ -538,6 +542,7 @@ public class BuildOffManager extends JavaPlugin {
         ProtectedCuboidRegion pcr3 = new ProtectedCuboidRegion("contestcomplete", bv5, bv6);
         pcr3.setPriority(0);
         rgm.addRegion(pcr3);
+        pcr3.setFlag(DefaultFlag.BUILD, State.DENY);
         try {
             rgm.save();
         } catch (ProtectionDatabaseException ex) {
