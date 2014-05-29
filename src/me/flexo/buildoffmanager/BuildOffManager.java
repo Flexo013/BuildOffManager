@@ -237,8 +237,10 @@ public class BuildOffManager extends JavaPlugin {
         if (cmd.getName().equalsIgnoreCase("theme")) {
             if (RunningBuildOff) {
                 sender.sendMessage(ChatColor.GOLD + "The theme is: " + ChatColor.BLUE + getConfig().getString("theme"));
+            } else if (AfterBuildOff) {
+                sender.sendMessage(ChatColor.GOLD + "The Build Off has ended. The theme was: " + ChatColor.BLUE + getConfig().getString("theme"));
             } else {
-                sender.sendMessage(ChatColor.RED + "You can not see the theme, if there is no Build Off running.");
+                sender.sendMessage(ChatColor.RED + "You can not see the theme, since the Build Off hasn't started yet.");
             }
             return true;
         }
@@ -249,8 +251,8 @@ public class BuildOffManager extends JavaPlugin {
                 return false;
             } else {
                 getConfig().set("theme", args[0]);
-                sender.sendMessage(ChatColor.GREEN + "You succesfully changed the theme to: " + ChatColor.BLUE + args[0]);
                 saveConfig();
+                sender.sendMessage(ChatColor.GREEN + "You succesfully changed the theme to: " + ChatColor.BLUE + getConfig().getString("theme"));
             }
             return true;
         }
@@ -262,11 +264,12 @@ public class BuildOffManager extends JavaPlugin {
             } else {
                 getConfig().set("streamlink", args[0]);
                 saveConfig();
-                sender.sendMessage(ChatColor.GREEN + "You succesfully changed the stream link to: " + ChatColor.BLUE + args[0]);
+                sender.sendMessage(ChatColor.GREEN + "You succesfully changed the stream link to: " + ChatColor.BLUE + getConfig().getString("streamlink"));
             }
             return true;
         }
 
+        //Initializes the Build Off plots
         if (cmd.getName().equalsIgnoreCase("bominit")) {
             int max = getConfig().getInt(ChatColor.GREEN + "buildoff.maxcontestants");
             for (int i = 0; i < max; i++) {
@@ -276,7 +279,8 @@ public class BuildOffManager extends JavaPlugin {
             sender.sendMessage(ChatColor.GREEN + "Initializing Build Off complete!");
             return true;
         }
-        
+
+        //Reloads the config
         if (cmd.getName().equalsIgnoreCase("reloadbom")) {
             reloadConfig();
         }
