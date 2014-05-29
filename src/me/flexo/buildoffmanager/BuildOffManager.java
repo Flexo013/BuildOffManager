@@ -48,6 +48,8 @@ public class BuildOffManager extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        saveDefaultConfig();
+        reloadConfig();
         getConfig().set("contestants", BuildOffContestants);
         getConfig().set("buildoff.joinable", JoinableBuildOff);
         getConfig().set("buildoff.running", RunningBuildOff);
@@ -273,6 +275,10 @@ public class BuildOffManager extends JavaPlugin {
             createCompleteRegion();
             sender.sendMessage(ChatColor.GREEN + "Initializing Build Off complete!");
             return true;
+        }
+        
+        if (cmd.getName().equalsIgnoreCase("reloadbom")) {
+            reloadConfig();
         }
         return false;
     }
