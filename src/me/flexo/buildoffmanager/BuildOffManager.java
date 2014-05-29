@@ -267,9 +267,6 @@ public class BuildOffManager extends JavaPlugin {
 
         if (cmd.getName().equalsIgnoreCase("bominit")) {
             int max = getConfig().getInt(ChatColor.GREEN + "buildoff.maxcontestants");
-            if (max == 0) {
-                max = 48;
-            }
             for (int i = 0; i < max; i++) {
                 initializePlots(i);
             }
