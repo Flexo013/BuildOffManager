@@ -1,5 +1,5 @@
 theme: Cats
-streamlink: http://www.YouTube.com/Flexo013
+streamlink: http://www.Twitch.tv/FlexoTV
 buildoff:
   joinable: false
   running: false
@@ -9,11 +9,17 @@ layout:
   #plotwidth is counted including the stone slab borders
   plotwidth: 32
   pathwidth: 4
-  plotsperrow: 6
+  plotsperrow: 8
 startblock:
   #These are the worldname and coordinates of the glowstone block of the first plot
   world: Yavana2
-  x: 1715
+  x: 1751
   y: 64
   z: 1504
+boardstartblock:
+  #These are the worldname and coordinates of first sign of the big plot layout board
+  world: Yavana2
+  x: 1655
+  y: 70
+  z: 1446
 contestants: 

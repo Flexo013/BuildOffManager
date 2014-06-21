@@ -304,7 +304,7 @@ public class BuildOffManager extends JavaPlugin {
     }
 
     private void joinBuildOff(CommandSender sender) {
-        int i=0;
+        int i = 0;
         for (String playerName : BuildOffContestants) {
             if (playerName.equals("")) {
                 BuildOffContestants.set(i, sender.getName());
@@ -353,10 +353,13 @@ public class BuildOffManager extends JavaPlugin {
     private void updateBoard(CommandSender sender) {
         int plotNumber;
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
-        String worldName = getConfig().getString("startblock.world");
+        String worldName = getConfig().getString("boardstartblock.world");
+        int boardStartX = getConfig().getInt("boardstartblock.x");
+        int boardStartY = getConfig().getInt("boardstartblock.y");
+        int boardStartZ = getConfig().getInt("boardstartblock.z");
         plotNumber = BuildOffContestants.indexOf(sender.getName());
         Location boardSign;
-        boardSign = new Location(getServer().getWorld(worldName), 1654 - ((plotNumber % plotsPerRow) * 1), 70 + ((plotNumber / plotsPerRow) * 1), 1446);
+        boardSign = new Location(getServer().getWorld(worldName), boardStartX - ((plotNumber % plotsPerRow) * 1), boardStartY + ((plotNumber / plotsPerRow) * 1), boardStartZ);
         boardSign.getBlock().setType(Material.WALL_SIGN);
         boardSign.getBlock().setData((byte) 2);
         Sign sign;
@@ -365,12 +368,15 @@ public class BuildOffManager extends JavaPlugin {
         sign.setLine(2, sender.getName());
         sign.update();
     }
-    
+
     private void resetOneBoardSign(int plotNumber) {
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
-        String worldName = getConfig().getString("startblock.world");
+        String worldName = getConfig().getString("boardstartblock.world");
+        int boardStartX = getConfig().getInt("boardstartblock.x");
+        int boardStartY = getConfig().getInt("boardstartblock.y");
+        int boardStartZ = getConfig().getInt("boardstartblock.z");
         Location boardSign;
-        boardSign = new Location(getServer().getWorld(worldName), 1654 - ((plotNumber % plotsPerRow) * 1), 70 + ((plotNumber / plotsPerRow) * 1), 1446);
+        boardSign = new Location(getServer().getWorld(worldName), boardStartX - ((plotNumber % plotsPerRow) * 1), boardStartY + ((plotNumber / plotsPerRow) * 1), boardStartZ);
         boardSign.getBlock().setType(Material.WALL_SIGN);
         boardSign.getBlock().setData((byte) 2);
         Sign sign;
@@ -417,10 +423,15 @@ public class BuildOffManager extends JavaPlugin {
     }
 
     private void resetBoard() {
+        int maxPlotNumber = getConfig().getInt("maxcontestants") - 1;
+        int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+        String worldName = getConfig().getString("boardstartblock.world");
+        int boardStartX = getConfig().getInt("boardstartblock.x");
+        int boardStartY = getConfig().getInt("boardstartblock.y");
+        int boardStartZ = getConfig().getInt("boardstartblock.z");
         Location l1, l2;
-        String worldName = getConfig().getString("startblock.world");
-        l1 = new Location(getServer().getWorld(worldName), 1654, 70, 1446);
-        l2 = new Location(getServer().getWorld(worldName), 1649, 75, 1446);
+        l1 = new Location(getServer().getWorld(worldName), boardStartX, boardStartY, boardStartZ);
+        l2 = new Location(getServer().getWorld(worldName), boardStartX - (plotsPerRow - 1), boardStartY + ((maxPlotNumber / plotsPerRow) * 1) - 1, boardStartZ);
         setBlocks(l1, l2, Material.AIR);
     }
 
