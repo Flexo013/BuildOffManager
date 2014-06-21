@@ -4,7 +4,7 @@ buildoff:
   joinable: false
   running: false
   after: false
-  maxcontestants: 36
+  maxcontestants: 64
 layout:
   #plotwidth is counted including the stone slab borders
   plotwidth: 32
