@@ -325,7 +325,7 @@ public class BuildOffManager extends JavaPlugin {
     private void leaveBuildOff(CommandSender sender) {
         int playerIndex = BuildOffContestants.indexOf(sender.getName());
         resetPlot(playerIndex);
-        resetOneBoardSign(playerIndex);
+        removeOneBoardSign(playerIndex);
         BuildOffContestants.set(playerIndex, "");
         sender.sendMessage(ChatColor.GREEN + "You have left the Build Off! You can rejoin by using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
     }
@@ -370,7 +370,7 @@ public class BuildOffManager extends JavaPlugin {
         sign.update();
     }
 
-    private void resetOneBoardSign(int plotNumber) {
+    private void removeOneBoardSign(int plotNumber) {
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
         String worldName = getConfig().getString("boardstartblock.world");
         int boardStartX = getConfig().getInt("boardstartblock.x");
@@ -378,13 +378,7 @@ public class BuildOffManager extends JavaPlugin {
         int boardStartZ = getConfig().getInt("boardstartblock.z");
         Location boardSign;
         boardSign = new Location(getServer().getWorld(worldName), boardStartX - ((plotNumber % plotsPerRow) * 1), boardStartY + ((plotNumber / plotsPerRow) * 1), boardStartZ);
-        boardSign.getBlock().setType(Material.WALL_SIGN);
-        boardSign.getBlock().setData((byte) 2);
-        Sign sign;
-        sign = (Sign) boardSign.getBlock().getState();
-        sign.setLine(0, Integer.toString(plotNumber + 1));
-        sign.setLine(2, "");
-        sign.update();
+        boardSign.getBlock().setType(Material.AIR);
     }
 
     private void updateThemeSign() {
