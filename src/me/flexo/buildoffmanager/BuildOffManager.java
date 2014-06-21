@@ -492,7 +492,11 @@ public class BuildOffManager extends JavaPlugin {
 
             //Make sign say [RESET]
             Location boardSign;
-            boardSign = new Location(getServer().getWorld(worldName), 1654 - ((number % plotsPerRow) * 1), 70 + ((number / plotsPerRow) * 1), 1446);
+            worldName = getConfig().getString("boardstartblock.world");
+            int boardStartX = getConfig().getInt("boardstartblock.x");
+            int boardStartY = getConfig().getInt("boardstartblock.y");
+            int boardStartZ = getConfig().getInt("boardstartblock.z");
+            boardSign = new Location(getServer().getWorld(worldName), boardStartX - ((number % plotsPerRow) * 1), boardStartY + ((number / plotsPerRow) * 1), boardStartZ);
             boardSign.getBlock().setType(Material.WALL_SIGN);
             boardSign.getBlock().setData((byte) 2);
             Sign sign2;
