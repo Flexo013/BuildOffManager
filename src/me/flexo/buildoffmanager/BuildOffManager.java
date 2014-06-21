@@ -287,7 +287,7 @@ public class BuildOffManager extends JavaPlugin {
 
         //Initializes the Build Off plots
         if (cmd.getName().equalsIgnoreCase("bominit")) {
-            int max = getConfig().getInt(ChatColor.GREEN + "buildoff.maxcontestants");
+            int max = getConfig().getInt("buildoff.maxcontestants");
             for (int i = 0; i < max; i++) {
                 initializePlots(i);
             }
@@ -423,7 +423,7 @@ public class BuildOffManager extends JavaPlugin {
     }
 
     private void resetBoard() {
-        int maxPlotNumber = getConfig().getInt("maxcontestants") - 1;
+        int maxPlotNumber = getConfig().getInt("buildoff.maxcontestants") - 1;
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
         String worldName = getConfig().getString("boardstartblock.world");
         int boardStartX = getConfig().getInt("boardstartblock.x");
