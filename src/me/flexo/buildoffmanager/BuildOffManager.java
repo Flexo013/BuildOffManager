@@ -324,7 +324,7 @@ public class BuildOffManager extends JavaPlugin {
 
     private void leaveBuildOff(CommandSender sender) {
         int playerIndex = BuildOffContestants.indexOf(sender.getName());
-        resetPlot(BuildOffContestants.indexOf(playerIndex));
+        resetPlot(playerIndex);
         resetOneBoardSign(playerIndex);
         BuildOffContestants.set(playerIndex, "");
     }
