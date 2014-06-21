@@ -327,6 +327,7 @@ public class BuildOffManager extends JavaPlugin {
         resetPlot(playerIndex);
         resetOneBoardSign(playerIndex);
         BuildOffContestants.set(playerIndex, "");
+        sender.sendMessage(ChatColor.GREEN + "You have left the Build Off! You can rejoin by using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
     }
 
     private void preparePlotSign(CommandSender sender) {
