@@ -313,9 +313,9 @@ public class BuildOffManager extends JavaPlugin {
             i++;
         }
         if (RunningBuildOff) {
-            sender.sendMessage(ChatColor.GREEN + "You have joined the Build Off! You can go to your plot using " + ChatColor.BLUE + "/tpplot" + ChatColor.GREEN + ". The theme is: " + ChatColor.BLUE + getConfig().getString("theme1"));
+            sender.sendMessage(ChatColor.GREEN + "You have joined the Build Off! You can go to your plot using " + ChatColor.BLUE + "/tpplot" + ChatColor.GREEN + ". The theme is: " + ChatColor.BLUE + getConfig().getString("theme"));
         } else {
-            sender.sendMessage(ChatColor.GREEN + "You have joined the Build Off! You can go to your plot using " + ChatColor.BLUE + "/tpplot" + ChatColor.GREEN + ". Do " + ChatColor.BLUE + "/theme" + ChatColor.GREEN + " to find out what the Theme is after the Build Off started.");
+            sender.sendMessage(ChatColor.GREEN + "You have joined the Build Off! You can go to your plot using " + ChatColor.BLUE + "/tpplot" + ChatColor.GREEN + ". You can do " + ChatColor.BLUE + "/leave" + ChatColor.GREEN + " to leave the Build Off.");
         }
         preparePlotSign(sender);
         updateBoard(sender);
