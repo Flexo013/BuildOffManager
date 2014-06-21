@@ -431,7 +431,7 @@ public class BuildOffManager extends JavaPlugin {
         int boardStartZ = getConfig().getInt("boardstartblock.z");
         Location l1, l2;
         l1 = new Location(getServer().getWorld(worldName), boardStartX, boardStartY, boardStartZ);
-        l2 = new Location(getServer().getWorld(worldName), boardStartX - (plotsPerRow - 1), boardStartY + ((maxPlotNumber / plotsPerRow) * 1) - 1, boardStartZ);
+        l2 = new Location(getServer().getWorld(worldName), boardStartX - (plotsPerRow - 1), boardStartY + ((maxPlotNumber / plotsPerRow) * 1), boardStartZ);
         setBlocks(l1, l2, Material.AIR);
     }
 
