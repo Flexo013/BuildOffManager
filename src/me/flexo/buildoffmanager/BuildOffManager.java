@@ -39,6 +39,7 @@ public class BuildOffManager extends JavaPlugin {
         this.saveDefaultConfig();
 
         BuildOffContestants = (ArrayList) getConfig().getStringList("contestants");
+        fillContestantsList();
         JoinableBuildOff = getConfig().getBoolean("buildoff.joinable");
         RunningBuildOff = getConfig().getBoolean("buildoff.running");
         AfterBuildOff = getConfig().getBoolean("buildoff.after");
@@ -129,13 +130,16 @@ public class BuildOffManager extends JavaPlugin {
                 AfterBuildOff = false;
                 resetThemeSign();
                 for (String playerName : BuildOffContestants) {
-                    int plotNumber;
-                    plotNumber = BuildOffContestants.indexOf(playerName);
-                    resetPlot(plotNumber);
-                    sender.sendMessage(ChatColor.GREEN + "Succesfully reset plot " + Integer.toString(plotNumber + 1));
+                    if (!playerName.equals("")) {
+                        int plotNumber;
+                        plotNumber = BuildOffContestants.indexOf(playerName);
+                        resetPlot(plotNumber);
+                        sender.sendMessage(ChatColor.GREEN + "Succesfully reset plot " + Integer.toString(plotNumber + 1));
+                    }
                 }
                 resetBoard();
                 BuildOffContestants.clear();
+                fillContestantsList();
             }
             return true;
         }
@@ -161,15 +165,17 @@ public class BuildOffManager extends JavaPlugin {
                 boolean playerOnline;
                 playerString = ChatColor.GOLD + "List of players that currently compete in the Build Off: " + ChatColor.YELLOW;
                 for (String playerName : BuildOffContestants) {
-                    playerOnline = false;
-                    for (Player player : sender.getServer().getOnlinePlayers()) {
-                        if (player.getPlayerListName().equals(playerName)) {
-                            playerString = playerString + " " + ChatColor.GREEN + playerName;
-                            playerOnline = true;
+                    if (!playerName.equals("")) {
+                        playerOnline = false;
+                        for (Player player : sender.getServer().getOnlinePlayers()) {
+                            if (player.getPlayerListName().equals(playerName)) {
+                                playerString = playerString + " " + ChatColor.GREEN + playerName;
+                                playerOnline = true;
+                            }
                         }
-                    }
-                    if (!playerOnline) {
-                        playerString = playerString + " " + ChatColor.YELLOW + playerName;
+                        if (!playerOnline) {
+                            playerString = playerString + " " + ChatColor.YELLOW + playerName;
+                        }
                     }
                 }
                 sender.sendMessage(playerString);
@@ -185,10 +191,12 @@ public class BuildOffManager extends JavaPlugin {
                 if (AfterBuildOff) {
                     sender.sendMessage(ChatColor.RED + "The Build Off has ended. You cannot join anymore.");
                 } else if (JoinableBuildOff) {
-                    if (BuildOffContestants.size() < getConfig().getInt("buildoff.maxcontestants")) {
-                        joinBuildOff(sender);
-                    } else {
+                    if (BuildOffContestants.contains(sender.getName())) {
+                        sender.sendMessage(ChatColor.RED + "You are already enrolled for the Build Off.");
+                    } else if (isFullBuildOff()) {
                         sender.sendMessage(ChatColor.RED + "The Build Off Area is currently full. Contact an operator to join the Build Off. We are sorry for the inconvenience.");
+                    } else {
+                        joinBuildOff(sender);
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "The enrollments for the Build Off have not opened yet.");
@@ -197,12 +205,20 @@ public class BuildOffManager extends JavaPlugin {
             return true;
         }
 
-        // Not supported at this time
+        // Allows a player to join the current Build Off
         if (cmd.getName().equalsIgnoreCase("leave")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage("The /leave command can only be used by players.");
             } else {
-                sender.sendMessage(ChatColor.RED + "Currently you cannot leave the Build Off.");
+                if (BuildOffContestants.contains(sender.getName())) {
+                    if (!RunningBuildOff && !AfterBuildOff) {
+                        leaveBuildOff(sender);
+                    } else {
+                        sender.sendMessage(ChatColor.RED + "You can only leave the Build Off before it starts.");
+                    }
+                } else {
+                    sender.sendMessage(ChatColor.RED + "You are not enrolled for the Build Off, so you cannot leave the Build Off.");
+                }
             }
             return true;
         }
@@ -288,19 +304,29 @@ public class BuildOffManager extends JavaPlugin {
     }
 
     private void joinBuildOff(CommandSender sender) {
-        if (BuildOffContestants.contains(sender.getName())) {
-            sender.sendMessage(ChatColor.RED + "You are already enrolled for the Build Off.");
-        } else {
-            BuildOffContestants.add(sender.getName());
-            if (RunningBuildOff) {
-                sender.sendMessage(ChatColor.GREEN + "You have joined the Build Off! You can go to your plot using " + ChatColor.BLUE + "/tpplot" + ChatColor.GREEN + ". The theme is: " + ChatColor.BLUE + getConfig().getString("theme1"));
-            } else {
-                sender.sendMessage(ChatColor.GREEN + "You have joined the Build Off! You can go to your plot using " + ChatColor.BLUE + "/tpplot" + ChatColor.GREEN + ". Do " + ChatColor.BLUE + "/theme" + ChatColor.GREEN + " to find out what the Theme is after the Build Off started.");
+        int i=0;
+        for (String playerName : BuildOffContestants) {
+            if (playerName.equals("")) {
+                BuildOffContestants.set(i, sender.getName());
+                break;
             }
-            preparePlotSign(sender);
-            updateBoard(sender);
-            updateRegions(sender.getName());
+            i++;
         }
+        if (RunningBuildOff) {
+            sender.sendMessage(ChatColor.GREEN + "You have joined the Build Off! You can go to your plot using " + ChatColor.BLUE + "/tpplot" + ChatColor.GREEN + ". The theme is: " + ChatColor.BLUE + getConfig().getString("theme1"));
+        } else {
+            sender.sendMessage(ChatColor.GREEN + "You have joined the Build Off! You can go to your plot using " + ChatColor.BLUE + "/tpplot" + ChatColor.GREEN + ". Do " + ChatColor.BLUE + "/theme" + ChatColor.GREEN + " to find out what the Theme is after the Build Off started.");
+        }
+        preparePlotSign(sender);
+        updateBoard(sender);
+        updateRegions(sender.getName());
+    }
+
+    private void leaveBuildOff(CommandSender sender) {
+        int playerIndex = BuildOffContestants.indexOf(sender.getName());
+        resetPlot(BuildOffContestants.indexOf(playerIndex));
+        resetOneBoardSign(playerIndex);
+        BuildOffContestants.set(playerIndex, "");
     }
 
     private void preparePlotSign(CommandSender sender) {
@@ -337,6 +363,20 @@ public class BuildOffManager extends JavaPlugin {
         sign = (Sign) boardSign.getBlock().getState();
         sign.setLine(0, Integer.toString(plotNumber + 1));
         sign.setLine(2, sender.getName());
+        sign.update();
+    }
+    
+    private void resetOneBoardSign(int plotNumber) {
+        int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+        String worldName = getConfig().getString("startblock.world");
+        Location boardSign;
+        boardSign = new Location(getServer().getWorld(worldName), 1654 - ((plotNumber % plotsPerRow) * 1), 70 + ((plotNumber / plotsPerRow) * 1), 1446);
+        boardSign.getBlock().setType(Material.WALL_SIGN);
+        boardSign.getBlock().setData((byte) 2);
+        Sign sign;
+        sign = (Sign) boardSign.getBlock().getState();
+        sign.setLine(0, Integer.toString(plotNumber + 1));
+        sign.setLine(2, "");
         sign.update();
     }
 
@@ -555,5 +595,20 @@ public class BuildOffManager extends JavaPlugin {
         } catch (ProtectionDatabaseException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void fillContestantsList() {
+        while (BuildOffContestants.size() < getConfig().getInt("buildoff.maxcontestants")) {
+            BuildOffContestants.add("");
+        }
+    }
+
+    private boolean isFullBuildOff() {
+        for (String playerName : BuildOffContestants) {
+            if (playerName.equals("")) {
+                return false;
+            }
+        }
+        return true;
     }
 }
