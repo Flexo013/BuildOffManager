@@ -304,6 +304,8 @@ public class BuildOffManager extends JavaPlugin {
         //Reloads the config
         if (cmd.getName().equalsIgnoreCase("reloadbom")) {
             reloadConfig();
+            sender.sendMessage(ChatColor.GREEN + "You have successfully reloaded the BuildOffManager config.");
+            return true;
         }
         return false;
     }
