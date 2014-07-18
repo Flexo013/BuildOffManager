@@ -1,5 +1,8 @@
 theme: Cats
-streamlink: http://www.Twitch.tv/FlexoTV
+stream: 
+  #Set enabled to false if you dont want a streamlink to be posted at the end of a Build Off
+  enabled: true
+  link: http://www.Twitch.tv/FlexoTV
 buildoff:
   joinable: false
   running: false
@@ -22,4 +25,10 @@ boardstartblock:
   x: 1655
   y: 70
   z: 1446
+themesignblock:
+  #These are the worldname and coordinates of sign that displays the theme
+  world: Yavana2
+  x: 1609
+  y: 65
+  z: 1447
 contestants: 

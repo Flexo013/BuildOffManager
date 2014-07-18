@@ -111,7 +111,12 @@ public class BuildOffManager extends JavaPlugin {
                     ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
                     rgContest.setPriority(2);
                     rgm.save();
-                    getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has ended! Judging will commence soon. You can watch the judging live at: " + ChatColor.BLUE + getConfig().getString("streamlink"));
+                    if (getConfig().getBoolean("stream.enabled")){
+                        getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has ended! Judging will commence soon. You can watch the judging live at: " + ChatColor.BLUE + getConfig().getString("streamlink"));
+                    } else {
+                        getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has ended! Judging will commence soon.");
+                    }
+                    
                 } catch (ProtectionDatabaseException ex) {
                     Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -383,8 +388,11 @@ public class BuildOffManager extends JavaPlugin {
 
     private void updateThemeSign() {
         Location loc;
-        String worldName = getConfig().getString("startblock.world");
-        loc = new Location(getServer().getWorld(worldName), 1609, 65, 1447);
+        String worldName = getConfig().getString("themesignblock.world");
+        int themeBlockX = getConfig().getInt("themesignblock.x");
+        int themeBlockY = getConfig().getInt("themesignblock.y");
+        int themeBlockZ = getConfig().getInt("themesignblock.z");
+        loc = new Location(getServer().getWorld(worldName), themeBlockX, themeBlockY, themeBlockZ);
         loc.getBlock().setType(Material.WALL_SIGN);
         loc.getBlock().setData((byte) 2);
         String subString1 = getConfig().getString("theme");
@@ -432,8 +440,11 @@ public class BuildOffManager extends JavaPlugin {
 
     private void resetThemeSign() {
         Location loc;
-        String worldName = getConfig().getString("startblock.world");
-        loc = new Location(getServer().getWorld(worldName), 1609, 65, 1447);
+        String worldName = getConfig().getString("themesignblock.world");
+        int themeBlockX = getConfig().getInt("themesignblock.x");
+        int themeBlockY = getConfig().getInt("themesignblock.y");
+        int themeBlockZ = getConfig().getInt("themesignblock.z");
+        loc = new Location(getServer().getWorld(worldName), themeBlockX, themeBlockY, themeBlockZ);
         loc.getBlock().setType(Material.WALL_SIGN);
         loc.getBlock().setData((byte) 2);
         Sign sign;
