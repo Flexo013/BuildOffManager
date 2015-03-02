@@ -3,10 +3,10 @@ package me.flexo.buildoffmanager;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
@@ -65,6 +65,7 @@ public class BuildOffManager extends JavaPlugin {
             if (RunningBuildOff) {
                 sender.sendMessage(ChatColor.RED + "The Build Off is already running.");
             } else {
+                
                 try {
                     if (!JoinableBuildOff) {
                         JoinableBuildOff = true;
@@ -80,9 +81,10 @@ public class BuildOffManager extends JavaPlugin {
                     getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has started! You will have 24 hours to complete your build. The theme is: " + ChatColor.BLUE + ChatColor.BOLD + getConfig().getString("theme"));
                     updateThemeSign();
                     //Add start of broadcasting here
-                } catch (ProtectionDatabaseException ex) {
+                } catch (StorageException ex) {
                     Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                 
             }
             return true;
         }
@@ -117,7 +119,7 @@ public class BuildOffManager extends JavaPlugin {
                         getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has ended! Judging will commence soon.");
                     }
                     
-                } catch (ProtectionDatabaseException ex) {
+                } catch (StorageException ex) {
                     Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
@@ -422,7 +424,7 @@ public class BuildOffManager extends JavaPlugin {
             rgm.addRegion(rgBig);
             rgm.addRegion(rgSmall);
             rgm.save();
-        } catch (ProtectionDatabaseException ex) {
+        } catch (StorageException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -524,7 +526,7 @@ public class BuildOffManager extends JavaPlugin {
             rgm.addRegion(pcr1);
             rgm.addRegion(pcr2);
             rgm.save();
-        } catch (ProtectionDatabaseException ex) {
+        } catch (StorageException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -593,7 +595,7 @@ public class BuildOffManager extends JavaPlugin {
             rgm.addRegion(pcr1);
             rgm.addRegion(pcr2);
             rgm.save();
-        } catch (ProtectionDatabaseException ex) {
+        } catch (StorageException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -615,7 +617,7 @@ public class BuildOffManager extends JavaPlugin {
         pcr3.setFlag(DefaultFlag.BUILD, State.DENY);
         try {
             rgm.save();
-        } catch (ProtectionDatabaseException ex) {
+        } catch (StorageException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
