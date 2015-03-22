@@ -354,7 +354,8 @@ public class BuildOffManager extends JavaPlugin {
         boardSign.getBlock().setData((byte) 10);
         Sign sign;
         sign = (Sign) boardSign.getBlock().getState();
-        sign.setLine(0, Integer.toString(plotNumber + 1));
+        String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(plotNumber + 1) + ChatColor.DARK_BLUE + ">");
+        sign.setLine(0, fancyPlotNumber);
         sign.setLine(2, sender.getName());
         sign.update();
     }
@@ -373,7 +374,8 @@ public class BuildOffManager extends JavaPlugin {
         boardSign.getBlock().setData((byte) 2);
         Sign sign;
         sign = (Sign) boardSign.getBlock().getState();
-        sign.setLine(0, Integer.toString(plotNumber + 1));
+        String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(plotNumber + 1) + ChatColor.DARK_BLUE + ">");
+        sign.setLine(0, fancyPlotNumber);
         sign.setLine(2, sender.getName());
         sign.update();
     }
@@ -494,7 +496,8 @@ public class BuildOffManager extends JavaPlugin {
             plotSign.getBlock().setData((byte) 10);
             Sign sign;
             sign = (Sign) plotSign.getBlock().getState();
-            sign.setLine(0, Integer.toString(number + 1));
+            String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(number + 1) + ChatColor.DARK_BLUE + ">");
+            sign.setLine(0, fancyPlotNumber);
             sign.setLine(2, "");
             sign.update();
 
@@ -509,7 +512,7 @@ public class BuildOffManager extends JavaPlugin {
             boardSign.getBlock().setData((byte) 2);
             Sign sign2;
             sign2 = (Sign) boardSign.getBlock().getState();
-            sign2.setLine(1, "[RESET]");
+            sign2.setLine(1, (ChatColor.DARK_GRAY + "[RESET]"));
             sign2.update();
 
             //Reset the regions
@@ -578,7 +581,8 @@ public class BuildOffManager extends JavaPlugin {
             plotSign.getBlock().setData((byte) 10);
             Sign sign;
             sign = (Sign) plotSign.getBlock().getState();
-            sign.setLine(0, Integer.toString(number + 1));
+            String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(number + 1) + ChatColor.DARK_BLUE + ">");
+            sign.setLine(0, fancyPlotNumber);
             sign.setLine(2, "");
             sign.update();
 
