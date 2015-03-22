@@ -95,7 +95,7 @@ public class BuildOffManager extends JavaPlugin {
             } else {
                 JoinableBuildOff = true;
                 sender.sendMessage(PreFix + ChatColor.GREEN + "People can now join the Build Off using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
-                getServer().broadcastMessage(BroadcastPreFix + "The Build Off has been opened. Do " + ChatColor.BLUE + "/join" + ChatColor.GOLD + " to enroll yourself!");
+                getServer().broadcastMessage(BroadcastPreFix + "The Build Off has been opened. Do " + ChatColor.BLUE + "/join" + ChatColor.DARK_AQUA + " to enroll yourself!");
             }
             return true;
         }
