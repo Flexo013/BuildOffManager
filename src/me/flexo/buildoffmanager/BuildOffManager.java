@@ -65,7 +65,6 @@ public class BuildOffManager extends JavaPlugin {
             if (RunningBuildOff) {
                 sender.sendMessage(ChatColor.RED + "The Build Off is already running.");
             } else {
-                
                 try {
                     if (!JoinableBuildOff) {
                         JoinableBuildOff = true;
@@ -84,7 +83,6 @@ public class BuildOffManager extends JavaPlugin {
                 } catch (StorageException ex) {
                     Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                 
             }
             return true;
         }
@@ -113,12 +111,12 @@ public class BuildOffManager extends JavaPlugin {
                     ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
                     rgContest.setPriority(2);
                     rgm.save();
-                    if (getConfig().getBoolean("stream.enabled")){
+                    if (getConfig().getBoolean("stream.enabled")) {
                         getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has ended! Judging will commence soon. You can watch the judging live at: " + ChatColor.BLUE + getConfig().getString("streamlink"));
                     } else {
                         getServer().broadcastMessage(ChatColor.GOLD + "The Build Off has ended! Judging will commence soon.");
                     }
-                    
+
                 } catch (StorageException ex) {
                     Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
