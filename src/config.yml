@@ -7,28 +7,28 @@ buildoff:
   joinable: false
   running: false
   after: false
-  maxcontestants: 64
+  maxcontestants: 36
 layout:
   #plotwidth is counted including the stone slab borders
   plotwidth: 32
   pathwidth: 4
-  plotsperrow: 8
+  plotsperrow: 6
 startblock:
   #These are the worldname and coordinates of the glowstone block of the first plot
-  world: Yavana2
-  x: 1751
+  world: world
+  x: 0
   y: 64
-  z: 1504
+  z: 0
 boardstartblock:
   #These are the worldname and coordinates of first sign of the big plot layout board
-  world: Yavana2
-  x: 1655
-  y: 70
-  z: 1446
+  world: world
+  x: -6
+  y: 65
+  z: -8
 themesignblock:
   #These are the worldname and coordinates of sign that displays the theme
-  world: Yavana2
-  x: 1609
+  world: world
+  x: -2
   y: 65
-  z: 1447
+  z: -8
 contestants: 
