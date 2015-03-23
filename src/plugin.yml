@@ -42,6 +42,10 @@ commands:
     description: End the current Build Off.
     usage: §cThe correct format is /endbuildoff
     permission: buildoffmanager.op
+  endbo:
+    description: End the current Build Off.
+    usage: §cThe correct format is /endbo
+    permission: buildoffmanager.op
   resetbuildoff:
     description: Resets the Build Off area and contestant list.
     usage: §cThe correct format is /resetbuildoff

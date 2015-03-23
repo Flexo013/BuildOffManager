@@ -102,29 +102,10 @@ public class BuildOffManager extends JavaPlugin {
 
         // Ends the current Build Off.
         if (cmd.getName().equalsIgnoreCase("endbuildoff")) {
-            if (RunningBuildOff) {
-                try {
-                    JoinableBuildOff = false;
-                    RunningBuildOff = false;
-                    AfterBuildOff = true;
-                    String worldName = getConfig().getString("startblock.world");
-                    RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
-                    ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
-                    rgContest.setPriority(2);
-                    rgm.save();
-                    if (getConfig().getBoolean("stream.enabled")) {
-                        getServer().broadcastMessage(BroadcastPreFix + "The Build Off has ended! Judging will commence soon. You can watch the judging live at: " + ChatColor.BLUE + getConfig().getString("streamlink"));
-                    } else {
-                        getServer().broadcastMessage(BroadcastPreFix + "The Build Off has ended! Judging will commence soon.");
-                    }
-
-                } catch (StorageException ex) {
-                    Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                sender.sendMessage(PreFix + ChatColor.RED + "There is no Build Off running that you can end.");
-            }
-            return true;
+            return endBuildOff(sender);
+        }
+        if (cmd.getName().equalsIgnoreCase("endbo")) {
+            return endBuildOff(sender);
         }
 
         // Resets the Build Off plots and clear the contestant list
@@ -309,6 +290,32 @@ public class BuildOffManager extends JavaPlugin {
             return true;
         }
         return false;
+    }
+
+    private boolean endBuildOff(CommandSender sender) {
+        if (RunningBuildOff) {
+            try {
+                JoinableBuildOff = false;
+                RunningBuildOff = false;
+                AfterBuildOff = true;
+                String worldName = getConfig().getString("startblock.world");
+                RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
+                ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
+                rgContest.setPriority(2);
+                rgm.save();
+                if (getConfig().getBoolean("stream.enabled")) {
+                    getServer().broadcastMessage(BroadcastPreFix + "The Build Off has ended! Judging will commence soon. You can watch the judging live at: " + ChatColor.BLUE + getConfig().getString("streamlink"));
+                } else {
+                    getServer().broadcastMessage(BroadcastPreFix + "The Build Off has ended! Judging will commence soon.");
+                }
+                
+            } catch (StorageException ex) {
+                Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            sender.sendMessage(PreFix + ChatColor.RED + "There is no Build Off running that you can end.");
+        }
+        return true;
     }
 
     private void joinBuildOff(CommandSender sender) {
