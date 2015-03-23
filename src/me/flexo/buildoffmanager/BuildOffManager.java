@@ -115,12 +115,12 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 
         // Lists all players who enrolled for the Build Off
         if (cmd.getName().equalsIgnoreCase("listplayers")) {
-            if (BuildOffContestants.isEmpty()) {
+            if (isNoContestants()) {
                 sender.sendMessage(PreFix + ChatColor.GOLD + "Currently nobody is competing in the Build Off.");
             } else {
                 String playerString;
                 boolean playerOnline;
-                playerString = PreFix + ChatColor.GOLD + "List of players that currently compete in the Build Off: " + ChatColor.YELLOW;
+                playerString = PreFix + ChatColor.GOLD + "List of players that currently compete in the Build Off:" + ChatColor.YELLOW;
                 for (String playerName : BuildOffContestants) {
                     if (!playerName.equals("")) {
                         playerOnline = false;
@@ -685,10 +685,10 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             BlockVector bv4 = new BlockVector(l8.getBlockX(), l8.getBlockY(), l8.getBlockZ());
             List<BlockVector2D> bv2dList = new ArrayList<>();
             bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ()));
-            bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ() - plotWidth+1));
+            bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ() - plotWidth + 1));
             bv2dList.add(new BlockVector2D(l8.getBlockX() - 1, l8.getBlockZ()));
             bv2dList.add(new BlockVector2D(l8.getBlockX(), l8.getBlockZ() + 1));
-            bv2dList.add(new BlockVector2D(l7.getBlockX() + plotWidth-1, l7.getBlockZ()));
+            bv2dList.add(new BlockVector2D(l7.getBlockX() + plotWidth - 1, l7.getBlockZ()));
             ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, l7.getBlockY(), l7.getBlockY());
             pcr1.setPriority(1);
             ppr1.setPriority(1);
@@ -731,6 +731,15 @@ public class BuildOffManager extends JavaPlugin implements Listener {
     private boolean isFullBuildOff() {
         for (String playerName : BuildOffContestants) {
             if (playerName.equals("")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isNoContestants() {
+        for (String playerName : BuildOffContestants) {
+            if (!playerName.equals("")) {
                 return false;
             }
         }
