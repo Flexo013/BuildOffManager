@@ -599,7 +599,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             boardSign.getBlock().setData((byte) 2);
             Sign sign2;
             sign2 = (Sign) boardSign.getBlock().getState();
-            sign2.setLine(1, (ChatColor.DARK_GRAY + "[RESET]"));
+            sign2.setLine(1, (ChatColor.GRAY + "[RESET]"));
             sign2.update();
 
             //Reset the regions
