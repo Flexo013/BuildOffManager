@@ -1,6 +1,6 @@
 name: BuildOffManager
 main: me.flexo.buildoffmanager.BuildOffManager
-version: 1.10.1
+version: 1.10.2
 website: http://www.polygoncraft.net
 description: Manages Build Offs
 author: Flexo013
