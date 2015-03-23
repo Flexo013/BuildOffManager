@@ -1,6 +1,7 @@
 package me.flexo.buildoffmanager;
 
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -8,8 +9,10 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
@@ -30,7 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * @author Flexo013
  */
-public class BuildOffManager extends JavaPlugin implements Listener{
+public class BuildOffManager extends JavaPlugin implements Listener {
 
     private static final Logger log = Logger.getLogger("Minecraft");
     public ArrayList<String> BuildOffContestants = new ArrayList<>();
@@ -190,7 +193,7 @@ public class BuildOffManager extends JavaPlugin implements Listener{
                         sender.sendMessage(PreFix + ChatColor.RED + "You are not enrolled for the Build Off. So you cannot be teleported to your plot.");
                     }
                     return true;
-                } 
+                }
                 if (args.length == 1) {
                     String targetPlotOwner = args[0];
                     if (BuildOffContestants.contains(targetPlotOwner)) {
@@ -281,8 +284,8 @@ public class BuildOffManager extends JavaPlugin implements Listener{
             if (signs.getBlocks().contains(event.getClickedBlock()) && (event.getClickedBlock().getType() == Material.WALL_SIGN)) {
                 Sign sign = (Sign) event.getClickedBlock().getState();
                 String line = sign.getLine(0);
-                int plotNumber = Integer.parseInt(line.substring(5, line.length()-3));
-                tpToPlot(plotNumber-1, p);
+                int plotNumber = Integer.parseInt(line.substring(5, line.length() - 3));
+                tpToPlot(plotNumber - 1, p);
             }
         }
 
@@ -293,8 +296,8 @@ public class BuildOffManager extends JavaPlugin implements Listener{
         plotNumber = BuildOffContestants.indexOf(targetPlotOwner);
         tpToPlot(plotNumber, player);
     }
-    
-    private void tpToPlot(int plotNumber, Player player){
+
+    private void tpToPlot(int plotNumber, Player player) {
         Location teleLoc;
         int pathWidth = getConfig().getInt("layout.pathwidth");
         int plotWidth = getConfig().getInt("layout.plotwidth");
@@ -649,7 +652,7 @@ public class BuildOffManager extends JavaPlugin implements Listener{
             Location l6 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 1), (startZ + 1) + deltaZ);
             setBlocks(l5, l6, Material.GRASS);
             Location l7 = new Location(getServer().getWorld(worldName), (startX - (plotWidth - 1)) - (deltaX), startY, (startZ + (plotWidth - 1)) + deltaZ);
-            Location l8 = new Location(getServer().getWorld(worldName), startX - (deltaX), 64, startZ + deltaZ);
+            Location l8 = new Location(getServer().getWorld(worldName), startX - (deltaX), startY, startZ + deltaZ);
             setBlocks(l7, l8, Material.STEP);
             Location l9 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), 255, (startZ + deltaPlot) + deltaZ);
             Location l10 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), startY, (startZ + 1) + deltaZ);
@@ -673,11 +676,18 @@ public class BuildOffManager extends JavaPlugin implements Listener{
             ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);
             BlockVector bv3 = new BlockVector(l7.getBlockX(), l7.getBlockY(), l7.getBlockZ());
             BlockVector bv4 = new BlockVector(l8.getBlockX(), l8.getBlockY(), l8.getBlockZ());
-            ProtectedCuboidRegion pcr2 = new ProtectedCuboidRegion(("plotsmall" + Integer.toString(number)), bv3, bv4);
+//            ProtectedCuboidRegion pcr2 = new ProtectedCuboidRegion(("plotsmall" + Integer.toString(number)), bv3, bv4);
+            List<BlockVector2D> bv2dList = new ArrayList<>();
+            bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ()));
+            bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ() - plotWidth+1));
+            bv2dList.add(new BlockVector2D(l8.getBlockX() - 1, l8.getBlockZ()));
+            bv2dList.add(new BlockVector2D(l8.getBlockX(), l8.getBlockZ() + 1));
+            bv2dList.add(new BlockVector2D(l7.getBlockX() + plotWidth-1, l7.getBlockZ()));
+            ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, l7.getBlockY(), l7.getBlockY());
             pcr1.setPriority(1);
-            pcr2.setPriority(1);
+            ppr1.setPriority(1);
             rgm.addRegion(pcr1);
-            rgm.addRegion(pcr2);
+            rgm.addRegion(ppr1);
             rgm.save();
         } catch (StorageException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
