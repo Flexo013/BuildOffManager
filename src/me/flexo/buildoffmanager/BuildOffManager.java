@@ -187,13 +187,16 @@ public class BuildOffManager extends JavaPlugin {
                     } else {
                         sender.sendMessage(PreFix + ChatColor.RED + "You are not enrolled for the Build Off. So you cannot be teleported to your plot.");
                     }
-                } else if (args.length == 1) {
+                    return true;
+                } 
+                if (args.length == 1) {
                     String targetPlotOwner = args[0];
                     if (BuildOffContestants.contains(targetPlotOwner)) {
                         tpToPlot(targetPlotOwner, player);
                     } else {
                         sender.sendMessage(PreFix + ChatColor.DARK_RED + targetPlotOwner + ChatColor.RED + " is not enrolled for the Build Off. So you cannot be teleported to their plot.");
                     }
+                    return true;
                 } else {
                     return false;
                 }
