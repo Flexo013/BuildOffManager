@@ -21,6 +21,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.PluginManager;
@@ -29,7 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * @author Flexo013
  */
-public class BuildOffManager extends JavaPlugin {
+public class BuildOffManager extends JavaPlugin implements Listener{
 
     private static final Logger log = Logger.getLogger("Minecraft");
     public ArrayList<String> BuildOffContestants = new ArrayList<>();
@@ -49,6 +50,7 @@ public class BuildOffManager extends JavaPlugin {
         AfterBuildOff = getConfig().getBoolean("buildoff.after");
         log.info("[BuildOffManager] Build Off configuration loaded.");
         PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(this, this);
     }
 
     @Override
@@ -279,7 +281,7 @@ public class BuildOffManager extends JavaPlugin {
             if (signs.getBlocks().contains(event.getClickedBlock()) && (event.getClickedBlock().getType() == Material.WALL_SIGN)) {
                 Sign sign = (Sign) event.getClickedBlock().getState();
                 String line = sign.getLine(0);
-                int plotNumber = Integer.getInteger(line.substring(3, line.length()-2));
+                int plotNumber = Integer.parseInt(line.substring(5, line.length()-3));
                 tpToPlot(plotNumber-1, p);
             }
         }
