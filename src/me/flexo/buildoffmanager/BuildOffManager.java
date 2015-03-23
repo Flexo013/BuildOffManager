@@ -120,7 +120,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             } else {
                 String playerString;
                 boolean playerOnline;
-                playerString = ChatColor.GOLD + "List of players that currently compete in the Build Off: " + ChatColor.YELLOW;
+                playerString = PreFix + ChatColor.GOLD + "List of players that currently compete in the Build Off: " + ChatColor.YELLOW;
                 for (String playerName : BuildOffContestants) {
                     if (!playerName.equals("")) {
                         playerOnline = false;
