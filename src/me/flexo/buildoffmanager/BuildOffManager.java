@@ -326,7 +326,8 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                 ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
                 rgContest.setPriority(0);
                 rgm.save();
-                getServer().broadcastMessage(BroadcastPreFix + "The Build Off has started! You will have 24 hours to complete your build. The theme is: " + ChatColor.BLUE + ChatColor.BOLD + getConfig().getString("theme"));
+                String buildOffDuration = getConfig().getString("buildoff.duration");
+                getServer().broadcastMessage(BroadcastPreFix + "The Build Off has started! You will have " + buildOffDuration + " to complete your build. The theme is: " + ChatColor.BLUE + ChatColor.BOLD + getConfig().getString("theme"));
                 updateThemeSign();
                 //Add start of broadcasting here
             } catch (StorageException ex) {

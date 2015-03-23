@@ -8,6 +8,7 @@ buildoff:
   running: false
   after: false
   maxcontestants: 36
+  duration: "24 hours"
 layout:
   #plotwidth is counted including the stone slab borders
   plotwidth: 32
