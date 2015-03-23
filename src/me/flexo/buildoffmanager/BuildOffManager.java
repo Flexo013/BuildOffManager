@@ -63,41 +63,18 @@ public class BuildOffManager extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         // Allows all contestants to build in their own plots.
         if (cmd.getName().equalsIgnoreCase("startbuildoff")) {
-            if (RunningBuildOff) {
-                sender.sendMessage(PreFix + ChatColor.RED + "The Build Off is already running.");
-            } else {
-                try {
-                    if (!JoinableBuildOff) {
-                        JoinableBuildOff = true;
-                        sender.sendMessage(PreFix + ChatColor.GREEN + "People can now join the Build Off using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
-                    }
-                    RunningBuildOff = true;
-                    sender.sendMessage(PreFix + ChatColor.GREEN + "You have started the Build Off.");
-                    String worldName = getConfig().getString("startblock.world");
-                    RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
-                    ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
-                    rgContest.setPriority(0);
-                    rgm.save();
-                    getServer().broadcastMessage(BroadcastPreFix + "The Build Off has started! You will have 24 hours to complete your build. The theme is: " + ChatColor.BLUE + ChatColor.BOLD + getConfig().getString("theme"));
-                    updateThemeSign();
-                    //Add start of broadcasting here
-                } catch (StorageException ex) {
-                    Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            return true;
+            return startBuildOff(sender);
+        }
+        if (cmd.getName().equalsIgnoreCase("startbo")) {
+            return startBuildOff(sender);
         }
 
         // Opens a new Build Off so people are allowed to do /join
         if (cmd.getName().equalsIgnoreCase("openbuildoff")) {
-            if (JoinableBuildOff) {
-                sender.sendMessage(PreFix + ChatColor.RED + "The Build Off is already opened. People can join using " + ChatColor.BLUE + "/join" + ChatColor.RED + ".");
-            } else {
-                JoinableBuildOff = true;
-                sender.sendMessage(PreFix + ChatColor.GREEN + "People can now join the Build Off using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
-                getServer().broadcastMessage(BroadcastPreFix + "The Build Off has been opened. Do " + ChatColor.BLUE + "/join" + ChatColor.DARK_AQUA + " to enroll yourself!");
-            }
-            return true;
+            return openBuildOff(sender);
+        }
+        if (cmd.getName().equalsIgnoreCase("openbo")) {
+            return openBuildOff(sender);
         }
 
         // Ends the current Build Off.
@@ -110,25 +87,10 @@ public class BuildOffManager extends JavaPlugin {
 
         // Resets the Build Off plots and clear the contestant list
         if (cmd.getName().equalsIgnoreCase("resetbuildoff")) {
-            if (RunningBuildOff || JoinableBuildOff) {
-                sender.sendMessage(PreFix + ChatColor.RED + "You can not reset the Build Off area right now.");
-            } else {
-                sender.sendMessage(PreFix + ChatColor.GREEN + "You just reset the Build Off area. You should be proud of yourself!");
-                AfterBuildOff = false;
-                resetThemeSign();
-                for (String playerName : BuildOffContestants) {
-                    if (!playerName.equals("")) {
-                        int plotNumber;
-                        plotNumber = BuildOffContestants.indexOf(playerName);
-                        resetPlot(plotNumber);
-                        sender.sendMessage(PreFix + ChatColor.GREEN + "Succesfully reset plot " + Integer.toString(plotNumber + 1));
-                    }
-                }
-                resetBoard();
-                BuildOffContestants.clear();
-                fillContestantsList();
-            }
-            return true;
+            return resetBuildOff(sender);
+        }
+        if (cmd.getName().equalsIgnoreCase("resetbo")) {
+            return resetBuildOff(sender);
         }
 
         //Resets one Build Off plot specified by int number
@@ -290,6 +252,65 @@ public class BuildOffManager extends JavaPlugin {
             return true;
         }
         return false;
+    }
+
+    private boolean startBuildOff(CommandSender sender) {
+        if (RunningBuildOff) {
+            sender.sendMessage(PreFix + ChatColor.RED + "The Build Off is already running.");
+        } else {
+            try {
+                if (!JoinableBuildOff) {
+                    JoinableBuildOff = true;
+                    sender.sendMessage(PreFix + ChatColor.GREEN + "People can now join the Build Off using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
+                }
+                RunningBuildOff = true;
+                sender.sendMessage(PreFix + ChatColor.GREEN + "You have started the Build Off.");
+                String worldName = getConfig().getString("startblock.world");
+                RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
+                ProtectedRegion rgContest = rgm.getRegion("contestcomplete");
+                rgContest.setPriority(0);
+                rgm.save();
+                getServer().broadcastMessage(BroadcastPreFix + "The Build Off has started! You will have 24 hours to complete your build. The theme is: " + ChatColor.BLUE + ChatColor.BOLD + getConfig().getString("theme"));
+                updateThemeSign();
+                //Add start of broadcasting here
+            } catch (StorageException ex) {
+                Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return true;
+    }
+
+    private boolean resetBuildOff(CommandSender sender) {
+        if (RunningBuildOff || JoinableBuildOff) {
+            sender.sendMessage(PreFix + ChatColor.RED + "You can not reset the Build Off area right now.");
+        } else {
+            sender.sendMessage(PreFix + ChatColor.GREEN + "You just reset the Build Off area. You should be proud of yourself!");
+            AfterBuildOff = false;
+            resetThemeSign();
+            for (String playerName : BuildOffContestants) {
+                if (!playerName.equals("")) {
+                    int plotNumber;
+                    plotNumber = BuildOffContestants.indexOf(playerName);
+                    resetPlot(plotNumber);
+                    sender.sendMessage(PreFix + ChatColor.GREEN + "Succesfully reset plot " + Integer.toString(plotNumber + 1));
+                }
+            }
+            resetBoard();
+            BuildOffContestants.clear();
+            fillContestantsList();
+        }
+        return true;
+    }
+
+    private boolean openBuildOff(CommandSender sender) {
+        if (JoinableBuildOff) {
+            sender.sendMessage(PreFix + ChatColor.RED + "The Build Off is already opened. People can join using " + ChatColor.BLUE + "/join" + ChatColor.RED + ".");
+        } else {
+            JoinableBuildOff = true;
+            sender.sendMessage(PreFix + ChatColor.GREEN + "People can now join the Build Off using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
+            getServer().broadcastMessage(BroadcastPreFix + "The Build Off has been opened. Do " + ChatColor.BLUE + "/join" + ChatColor.DARK_AQUA + " to enroll yourself!");
+        }
+        return true;
     }
 
     private boolean endBuildOff(CommandSender sender) {

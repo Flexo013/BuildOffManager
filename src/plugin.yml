@@ -34,9 +34,17 @@ commands:
     description: Open a new Build Off.
     usage: §cThe correct format is /openbuildoff
     permission: buildoffmanager.op
+  openbo:
+    description: Open a new Build Off.
+    usage: §cThe correct format is /openbo
+    permission: buildoffmanager.op
   startbuildoff:
     description: Start a new Build Off.
     usage: §cThe correct format is /startbuildoff
+    permission: buildoffmanager.op
+  startbo:
+    description: Start a new Build Off.
+    usage: §cThe correct format is /startbo
     permission: buildoffmanager.op
   endbuildoff:
     description: End the current Build Off.
@@ -49,6 +57,10 @@ commands:
   resetbuildoff:
     description: Resets the Build Off area and contestant list.
     usage: §cThe correct format is /resetbuildoff
+    permission: buildoffmanager.op
+  resetbo:
+    description: Resets the Build Off area and contestant list.
+    usage: §cThe correct format is /resetbo
     permission: buildoffmanager.op
   resetplot:
     description: Regenerates one specific plot.
