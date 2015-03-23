@@ -113,26 +113,20 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             return true;
         }
 
-        // Lists all players who enrolled for the Build Off
+        // Lists all players who are online, coloring them green if they already joined
         if (cmd.getName().equalsIgnoreCase("listplayers")) {
-            if (isNoContestants()) {
-                sender.sendMessage(PreFix + ChatColor.GOLD + "Currently nobody is competing in the Build Off.");
+            if (!JoinableBuildOff) {
+                sender.sendMessage(PreFix + ChatColor.GOLD + "Currently nobody can join the Build Off.");
             } else {
                 String playerString;
                 boolean playerOnline;
-                playerString = PreFix + ChatColor.GOLD + "List of players that currently compete in the Build Off:" + ChatColor.YELLOW;
-                for (String playerName : BuildOffContestants) {
-                    if (!playerName.equals("")) {
-                        playerOnline = false;
-                        for (Player player : sender.getServer().getOnlinePlayers()) {
-                            if (player.getPlayerListName().equals(playerName)) {
-                                playerString = playerString + " " + ChatColor.GREEN + playerName;
-                                playerOnline = true;
-                            }
-                        }
-                        if (!playerOnline) {
-                            playerString = playerString + " " + ChatColor.YELLOW + playerName;
-                        }
+                playerString = PreFix + ChatColor.GOLD + "List of online players:" + ChatColor.YELLOW;
+                for (Player player : sender.getServer().getOnlinePlayers()) {
+                    String playerName = player.getName();
+                    if (BuildOffContestants.contains(playerName)) {
+                        playerString = playerString + " " + ChatColor.GREEN + playerName;
+                    } else {
+                        playerString = playerString + " " + ChatColor.YELLOW + playerName;
                     }
                 }
                 sender.sendMessage(playerString);

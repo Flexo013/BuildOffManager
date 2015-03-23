@@ -67,7 +67,7 @@ commands:
     usage: §cThe correct format is /resetplot [plot_number]
     permission: buildoffmanager.op
   listplayers:
-    description: List all players from the contestant list.
+    description: List all players online.
     usage: §cThe correct format is /listplayers
     permission: buildoffmanager.listplayers
   bominit:
