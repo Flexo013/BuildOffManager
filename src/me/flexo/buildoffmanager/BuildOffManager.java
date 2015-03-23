@@ -172,27 +172,27 @@ public class BuildOffManager extends JavaPlugin {
             return true;
         }
 
-        // Teleports a player to their plot if they have one
+        // Teleports a player to a plot
         if (cmd.getName().equalsIgnoreCase("tpplot")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage("The /tpplot command can only be used by players.");
             } else {
                 Player player = (Player) sender;
-                if (BuildOffContestants.contains(player.getName())) {
-                    int plotNumber;
-                    plotNumber = BuildOffContestants.indexOf(player.getName());
-                    Location teleLoc;
-                    int pathWidth = getConfig().getInt("layout.pathwidth");
-                    int plotWidth = getConfig().getInt("layout.plotwidth");
-                    int plotsPerRow = getConfig().getInt("layout.plotsperrow");
-                    String worldName = getConfig().getString("startblock.world");
-                    int startX = getConfig().getInt("startblock.x");
-                    int startY = getConfig().getInt("startblock.y");
-                    int startZ = getConfig().getInt("startblock.z");
-                    teleLoc = new Location(getServer().getWorld(worldName), (startX + 0.5) - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), startY, (startZ - 2.5) + ((plotNumber / plotsPerRow) * (plotWidth + pathWidth)));
-                    player.teleport(teleLoc);
+                if (args.length == 0 || args[0].equals(player.getName())) {
+                    if (BuildOffContestants.contains(player.getName())) {
+                        tpToPlot(player.getName(), player);
+                    } else {
+                        sender.sendMessage(PreFix + ChatColor.RED + "You are not enrolled for the Build Off. So you cannot be teleported to your plot.");
+                    }
+                } else if (args.length == 1) {
+                    String targetPlotOwner = args[0];
+                    if (BuildOffContestants.contains(targetPlotOwner)) {
+                        tpToPlot(targetPlotOwner, player);
+                    } else {
+                        sender.sendMessage(PreFix + ChatColor.DARK_RED + targetPlotOwner + ChatColor.RED + " is not enrolled for the Build Off. So you cannot be teleported to their plot.");
+                    }
                 } else {
-                    sender.sendMessage(PreFix + ChatColor.RED + "You are not enrolled for the Build Off. So you cannot be teleported to your plot.");
+                    return false;
                 }
             }
             return true;
@@ -252,6 +252,21 @@ public class BuildOffManager extends JavaPlugin {
             return true;
         }
         return false;
+    }
+
+    private void tpToPlot(String targetPlotOwner, Player player) {
+        int plotNumber;
+        plotNumber = BuildOffContestants.indexOf(targetPlotOwner);
+        Location teleLoc;
+        int pathWidth = getConfig().getInt("layout.pathwidth");
+        int plotWidth = getConfig().getInt("layout.plotwidth");
+        int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+        String worldName = getConfig().getString("startblock.world");
+        int startX = getConfig().getInt("startblock.x");
+        int startY = getConfig().getInt("startblock.y");
+        int startZ = getConfig().getInt("startblock.z");
+        teleLoc = new Location(getServer().getWorld(worldName), (startX + 0.5) - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), startY, (startZ - 2.5) + ((plotNumber / plotsPerRow) * (plotWidth + pathWidth)));
+        player.teleport(teleLoc);
     }
 
     private boolean startBuildOff(CommandSender sender) {
@@ -329,7 +344,7 @@ public class BuildOffManager extends JavaPlugin {
                 } else {
                     getServer().broadcastMessage(BroadcastPreFix + "The Build Off has ended! Judging will commence soon.");
                 }
-                
+
             } catch (StorageException ex) {
                 Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
             }

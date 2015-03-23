@@ -15,8 +15,8 @@ commands:
     usage: §cThe correct format is /leave
     permission: buildoffmanager.default
   tpplot:
-    description: Teleport the player to his plot.
-    usage: §cThe correct format is /tpplot
+    description: Teleport the player the plot of [plot_owner].
+    usage: §cThe correct format is /tpplot [plot_owner]
     permission: buildoffmanager.default
   theme:
     description: Displays the theme of the current Build Off.
