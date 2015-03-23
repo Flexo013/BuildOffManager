@@ -557,6 +557,9 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             final int deltaX = (number % plotsPerRow) * (plotWidth + pathWidth);
             final int deltaZ = (number / plotsPerRow) * (plotWidth + pathWidth);
             final int deltaPlot = plotWidth - 2;
+            Location bedrockL1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), 0, (startZ + deltaPlot) + deltaZ);
+            Location bedrockL2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 0, (startZ + 1) + deltaZ);
+            setBlocks(bedrockL1, bedrockL2, Material.BEDROCK);
             Location l1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 5), (startZ + deltaPlot) + deltaZ);
             Location l2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 1, (startZ + 1) + deltaZ);
             setBlocks(l1, l2, Material.STONE);
@@ -642,6 +645,9 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             final int deltaX = (number % plotsPerRow) * (plotWidth + pathWidth);
             final int deltaZ = (number / plotsPerRow) * (plotWidth + pathWidth);
             final int deltaPlot = plotWidth - 2;
+            Location bedrockL1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), 0, (startZ + deltaPlot) + deltaZ);
+            Location bedrockL2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 0, (startZ + 1) + deltaZ);
+            setBlocks(bedrockL1, bedrockL2, Material.BEDROCK);
             Location l1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 5), (startZ + deltaPlot) + deltaZ);
             Location l2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 1, (startZ + 1) + deltaZ);
             setBlocks(l1, l2, Material.STONE);
