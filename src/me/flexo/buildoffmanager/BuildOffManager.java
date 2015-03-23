@@ -189,11 +189,19 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                     return true;
                 }
                 if (args.length == 1) {
-                    String targetPlotOwner = args[0];
-                    if (BuildOffContestants.contains(targetPlotOwner)) {
-                        tpToPlot(targetPlotOwner, player);
+                    if (args[0].matches("[0-9]+")) {
+                        if(getConfig().getInt("buildoff.maxcontestants") >= Integer.parseInt(args[0]) && Integer.parseInt(args[0]) > 0){
+                            tpToPlot((Integer.parseInt(args[0])-1), player);
+                        } else {
+                            sender.sendMessage(PreFix + ChatColor.RED + "Choose a plot number between 1 and " + getConfig().getString("buildoff.maxcontestants") + ".");
+                        }
                     } else {
-                        sender.sendMessage(PreFix + ChatColor.DARK_RED + targetPlotOwner + ChatColor.RED + " is not enrolled for the Build Off. So you cannot be teleported to their plot.");
+                        String targetPlotOwner = args[0];
+                        if (BuildOffContestants.contains(targetPlotOwner)) {
+                            tpToPlot(targetPlotOwner, player);
+                        } else {
+                            sender.sendMessage(PreFix + ChatColor.DARK_RED + targetPlotOwner + ChatColor.RED + " is not enrolled for the Build Off. So you cannot be teleported to their plot.");
+                        }
                     }
                     return true;
                 } else {
@@ -244,7 +252,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             sender.sendMessage(PreFix + ChatColor.GREEN + "You have successfully reloaded the BuildOffManager config.");
             return true;
         }
-        
+
         //Displays Build Off basic help
         if (cmd.getName().equalsIgnoreCase("bohelp")) {
             sender.sendMessage(ChatColor.YELLOW + " ---- " + ChatColor.GOLD + "Build Off Help" + ChatColor.YELLOW + " ---- ");
