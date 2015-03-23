@@ -20,6 +20,9 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -254,9 +257,39 @@ public class BuildOffManager extends JavaPlugin {
         return false;
     }
 
+    @EventHandler
+    public void onRightClick(PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player p = event.getPlayer();
+            //start cuboid calc
+            int maxPlotNumber = getConfig().getInt("buildoff.maxcontestants") - 1;
+            int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+            String worldName = getConfig().getString("boardstartblock.world");
+            int boardStartX = getConfig().getInt("boardstartblock.x");
+            int boardStartY = getConfig().getInt("boardstartblock.y");
+            int boardStartZ = getConfig().getInt("boardstartblock.z");
+            Location l1, l2;
+            l1 = new Location(getServer().getWorld(worldName), boardStartX, boardStartY, boardStartZ);
+            l2 = new Location(getServer().getWorld(worldName), boardStartX - (plotsPerRow - 1), boardStartY + ((maxPlotNumber / plotsPerRow) * 1), boardStartZ);
+            //end cuboid calc
+            Cuboid signs = new Cuboid(l1, l2);
+            if (signs.getBlocks().contains(event.getClickedBlock()) && (event.getClickedBlock().getType() == Material.WALL_SIGN)) {
+                Sign sign = (Sign) event.getClickedBlock().getState();
+                String line = sign.getLine(0);
+                int plotNumber = Integer.getInteger(line.substring(3, line.length()-2));
+                tpToPlot(plotNumber-1, p);
+            }
+        }
+
+    }
+
     private void tpToPlot(String targetPlotOwner, Player player) {
         int plotNumber;
         plotNumber = BuildOffContestants.indexOf(targetPlotOwner);
+        tpToPlot(plotNumber, player);
+    }
+    
+    private void tpToPlot(int plotNumber, Player player){
         Location teleLoc;
         int pathWidth = getConfig().getInt("layout.pathwidth");
         int plotWidth = getConfig().getInt("layout.plotwidth");
