@@ -26,10 +26,6 @@ commands:
     description: Changes the theme of the Build Off to [new_theme].
     usage: §cThe correct format is /settheme [new_theme]
     permission: buildoffmanager.op
-  setstreamlink:
-    description: Changes the stream link of the Build Off to [new_stream_link].
-    usage: §cThe correct format is /setstreamlink [new_stream_link]
-    permission: buildoffmanager.op
   openbuildoff:
     description: Open a new Build Off.
     usage: §cThe correct format is /openbuildoff

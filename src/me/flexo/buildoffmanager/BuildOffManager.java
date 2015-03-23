@@ -227,18 +227,6 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             return true;
         }
 
-        //Changes the Streamlink in the config.yml
-        if (cmd.getName().equalsIgnoreCase("setstreamlink")) {
-            if (!(args.length == 1)) {
-                return false;
-            } else {
-                getConfig().set("streamlink", args[0]);
-                saveConfig();
-                sender.sendMessage(PreFix + ChatColor.GREEN + "You succesfully changed the stream link to: " + ChatColor.BLUE + getConfig().getString("streamlink"));
-            }
-            return true;
-        }
-
         //Initializes the Build Off plots
         if (cmd.getName().equalsIgnoreCase("bominit")) {
             int max = getConfig().getInt("buildoff.maxcontestants");
