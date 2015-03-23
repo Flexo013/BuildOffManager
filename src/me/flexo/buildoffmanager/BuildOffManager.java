@@ -177,7 +177,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         // Teleports a player to a plot
         if (cmd.getName().equalsIgnoreCase("tpplot")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage("The /tpplot command can only be used by players.");
+                sender.sendMessage(PreFix + ChatColor.RED + "The /tpplot command can only be used by players.");
             } else {
                 Player player = (Player) sender;
                 if (args.length == 0 || args[0].equals(player.getName())) {
