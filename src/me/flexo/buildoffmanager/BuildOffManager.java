@@ -364,7 +364,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                 rgContest.setPriority(2);
                 rgm.save();
                 if (getConfig().getBoolean("stream.enabled")) {
-                    getServer().broadcastMessage(BroadcastPreFix + "The Build Off has ended! Judging will commence soon. You can watch the judging live at: " + ChatColor.BLUE + getConfig().getString("streamlink"));
+                    getServer().broadcastMessage(BroadcastPreFix + "The Build Off has ended! Judging will commence soon. You can watch the judging live at: " + ChatColor.BLUE + getConfig().getString("stream.link"));
                 } else {
                     getServer().broadcastMessage(BroadcastPreFix + "The Build Off has ended! Judging will commence soon.");
                 }
