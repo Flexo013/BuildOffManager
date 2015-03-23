@@ -2,7 +2,7 @@ theme: Cats
 stream: 
   #Set enabled to false if you dont want a streamlink to be posted at the end of a Build Off
   enabled: true
-  link: http://www.Twitch.tv/FlexoTV
+  link: "http://www.Twitch.tv/FlexoTV"
 buildoff:
   joinable: false
   running: false
