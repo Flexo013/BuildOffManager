@@ -706,7 +706,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         int sizetemp = (plotsPerRow * plotWidth) + ((plotsPerRow - 1) * pathWidth) - 1;
         BlockVector bv6 = new BlockVector((startX - sizetemp), 255, startZ + sizetemp);
         ProtectedCuboidRegion pcr3 = new ProtectedCuboidRegion("contestcomplete", bv5, bv6);
-        pcr3.setPriority(0);
+        pcr3.setPriority(2);
         rgm.addRegion(pcr3);
         pcr3.setFlag(DefaultFlag.BUILD, State.DENY);
         try {
