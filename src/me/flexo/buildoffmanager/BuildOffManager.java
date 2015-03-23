@@ -602,13 +602,17 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             BlockVector bv1 = new BlockVector(l2.getBlockX(), l2.getBlockY(), l2.getBlockZ());
             BlockVector bv2 = new BlockVector(l9.getBlockX(), l9.getBlockY(), l9.getBlockZ());
             ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);
-            BlockVector bv3 = new BlockVector(l7.getBlockX(), l7.getBlockY(), l7.getBlockZ());
-            BlockVector bv4 = new BlockVector(l8.getBlockX(), l8.getBlockY(), l8.getBlockZ());
-            ProtectedCuboidRegion pcr2 = new ProtectedCuboidRegion(("plotsmall" + Integer.toString(number)), bv3, bv4);
+            List<BlockVector2D> bv2dList = new ArrayList<>();
+            bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ()));
+            bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ() - plotWidth + 1));
+            bv2dList.add(new BlockVector2D(l8.getBlockX() - 1, l8.getBlockZ()));
+            bv2dList.add(new BlockVector2D(l8.getBlockX(), l8.getBlockZ() + 1));
+            bv2dList.add(new BlockVector2D(l7.getBlockX() + plotWidth - 1, l7.getBlockZ()));
+            ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, l7.getBlockY(), l7.getBlockY());
             pcr1.setPriority(1);
-            pcr2.setPriority(1);
+            ppr1.setPriority(1);
             rgm.addRegion(pcr1);
-            rgm.addRegion(pcr2);
+            rgm.addRegion(ppr1);
             rgm.save();
         } catch (StorageException ex) {
             Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -675,8 +679,6 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             BlockVector bv1 = new BlockVector(l2.getBlockX(), l2.getBlockY(), l2.getBlockZ());
             BlockVector bv2 = new BlockVector(l9.getBlockX(), l9.getBlockY(), l9.getBlockZ());
             ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);
-            BlockVector bv3 = new BlockVector(l7.getBlockX(), l7.getBlockY(), l7.getBlockZ());
-            BlockVector bv4 = new BlockVector(l8.getBlockX(), l8.getBlockY(), l8.getBlockZ());
             List<BlockVector2D> bv2dList = new ArrayList<>();
             bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ()));
             bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ() - plotWidth + 1));
