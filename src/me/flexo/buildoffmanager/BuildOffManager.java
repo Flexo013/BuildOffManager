@@ -244,6 +244,18 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             sender.sendMessage(PreFix + ChatColor.GREEN + "You have successfully reloaded the BuildOffManager config.");
             return true;
         }
+        
+        //Displays Build Off basic help
+        if (cmd.getName().equalsIgnoreCase("bohelp")) {
+            sender.sendMessage(ChatColor.YELLOW + " ---- " + ChatColor.GOLD + "Build Off Help" + ChatColor.YELLOW + " ---- ");
+            sender.sendMessage(ChatColor.GOLD + "/join" + ChatColor.RESET + ": Join the Build Off.");
+            sender.sendMessage(ChatColor.GOLD + "/leave" + ChatColor.RESET + ": Leave the Build Off.");
+            sender.sendMessage(ChatColor.GOLD + "/tpplot" + ChatColor.RESET + ": Teleport to your plot.");
+            sender.sendMessage(ChatColor.GOLD + "/tpplot <name>" + ChatColor.RESET + ": Teleport to the plot of <name>.");
+            sender.sendMessage(ChatColor.GOLD + "/theme" + ChatColor.RESET + ": Displays the Theme of the Build Off.");
+            sender.sendMessage(ChatColor.GOLD + "/bohelp" + ChatColor.RESET + ": Displays this help message.");
+            return true;
+        }
         return false;
     }
 

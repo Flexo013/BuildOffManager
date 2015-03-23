@@ -74,3 +74,7 @@ commands:
     description: Reloads the BuildOffManager config.
     usage: §cThe correct format is /reloadbom
     permission: buildoffmanager.op
+  bohelp:
+    description: Displays BuildOffManager basic help.
+    usage: §cThe correct format is /bohelp
+    permission: buildoffmanager.default
