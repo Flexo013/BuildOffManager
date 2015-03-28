@@ -190,8 +190,8 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                 }
                 if (args.length == 1) {
                     if (args[0].matches("[0-9]+")) {
-                        if(getConfig().getInt("buildoff.maxcontestants") >= Integer.parseInt(args[0]) && Integer.parseInt(args[0]) > 0){
-                            tpToPlot((Integer.parseInt(args[0])-1), player);
+                        if (getConfig().getInt("buildoff.maxcontestants") >= Integer.parseInt(args[0]) && Integer.parseInt(args[0]) > 0) {
+                            tpToPlot((Integer.parseInt(args[0]) - 1), player);
                         } else {
                             sender.sendMessage(PreFix + ChatColor.RED + "Choose a plot number between 1 and " + getConfig().getString("buildoff.maxcontestants") + ".");
                         }
@@ -239,7 +239,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         if (cmd.getName().equalsIgnoreCase("bominit")) {
             int max = getConfig().getInt("buildoff.maxcontestants");
             for (int i = 0; i < max; i++) {
-                initializePlots(i);
+                initializePlot(i);
             }
             createCompleteRegion();
             sender.sendMessage(PreFix + ChatColor.GREEN + "Initializing Build Off complete!");
@@ -302,7 +302,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
     private void tpToPlot(int plotNumber, Player player) {
         Location teleLoc;
         int pathWidth = getConfig().getInt("layout.pathwidth");
-        int plotWidth = getConfig().getInt("layout.plotwidth");
+        int plotWidth = getConfig().getInt("layout.plotsize");
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
         String worldName = getConfig().getString("startblock.world");
         int startX = getConfig().getInt("startblock.x");
@@ -430,7 +430,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         plotNumber = BuildOffContestants.indexOf(sender.getName());
         Location boardSign;
         int pathWidth = getConfig().getInt("layout.pathwidth");
-        int plotWidth = getConfig().getInt("layout.plotwidth");
+        int plotWidth = getConfig().getInt("layout.plotsize");
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
         String worldName = getConfig().getString("startblock.world");
         int startX = getConfig().getInt("startblock.x");
@@ -551,7 +551,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
     private void resetPlot(int number) {
         try {
             int pathWidth = getConfig().getInt("layout.pathwidth");
-            int plotWidth = getConfig().getInt("layout.plotwidth");
+            int plotWidth = getConfig().getInt("layout.plotsize");
             int plotsPerRow = getConfig().getInt("layout.plotsperrow");
             String worldName = getConfig().getString("startblock.world");
             int startX = getConfig().getInt("startblock.x");
@@ -640,60 +640,144 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         }
     }
 
-    private void initializePlots(int number) {
+    private int getX(int x, int direction) {
+        if ((direction & 2) == 2) {
+            return -x;
+        }
+        return x;
+    }
+
+    private int getZ(int z, int direction) {
+        if ((direction & 1) == 1) {
+            return -z;
+        }
+        return z;
+    }
+
+    private void initializePlot(int number) {
         try {
+            int direction = 2;
             int pathWidth = getConfig().getInt("layout.pathwidth");
-            int plotWidth = getConfig().getInt("layout.plotwidth");
+            int outerPlotSize = getConfig().getInt("layout.plotsize");
             int plotsPerRow = getConfig().getInt("layout.plotsperrow");
             String worldName = getConfig().getString("startblock.world");
             int startX = getConfig().getInt("startblock.x");
             int startY = getConfig().getInt("startblock.y");
             int startZ = getConfig().getInt("startblock.z");
-            final int deltaX = (number % plotsPerRow) * (plotWidth + pathWidth);
-            final int deltaZ = (number / plotsPerRow) * (plotWidth + pathWidth);
-            final int deltaPlot = plotWidth - 2;
-            Location bedrockL1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), 0, (startZ + deltaPlot) + deltaZ);
-            Location bedrockL2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 0, (startZ + 1) + deltaZ);
+            final int offsetX = (number % plotsPerRow) * (outerPlotSize + pathWidth);
+            final int offsetZ = (number / plotsPerRow) * (outerPlotSize + pathWidth);
+            final int innerPlotSize = outerPlotSize - 2;
+
+            Location bedrockL1 = new Location(
+                    getServer().getWorld(worldName),
+                    startX + getX(innerPlotSize + offsetX, direction),
+                    0,
+                    startZ + getZ(innerPlotSize + offsetZ, direction)
+            );
+            Location bedrockL2 = new Location(
+                    getServer().getWorld(worldName),
+                    startX + getX(1 + offsetX, direction),
+                    0,
+                    startZ + getZ(1 + offsetZ, direction)
+            );
             setBlocks(bedrockL1, bedrockL2, Material.BEDROCK);
-            Location l1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 5), (startZ + deltaPlot) + deltaZ);
-            Location l2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 1, (startZ + 1) + deltaZ);
-            setBlocks(l1, l2, Material.STONE);
-            Location l3 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 2), (startZ + deltaPlot) + deltaZ);
-            Location l4 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 4), (startZ + 1) + deltaZ);
-            setBlocks(l3, l4, Material.DIRT);
-            Location l5 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 1), (startZ + deltaPlot) + deltaZ);
-            Location l6 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 1), (startZ + 1) + deltaZ);
-            setBlocks(l5, l6, Material.GRASS);
-            Location l7 = new Location(getServer().getWorld(worldName), (startX - (plotWidth - 1)) - (deltaX), startY, (startZ + (plotWidth - 1)) + deltaZ);
-            Location l8 = new Location(getServer().getWorld(worldName), startX - (deltaX), startY, startZ + deltaZ);
-            setBlocks(l7, l8, Material.STEP);
-            Location l9 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), 255, (startZ + deltaPlot) + deltaZ);
-            Location l10 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), startY, (startZ + 1) + deltaZ);
-            setBlocks(l9, l10, Material.AIR);
-            Location l11 = new Location(getServer().getWorld(worldName), startX - (deltaX), startY, startZ + deltaZ);
-            getServer().getWorld(worldName).getBlockAt(l11).setType(Material.GLOWSTONE);
-            Location plotSign;
-            plotSign = new Location(getServer().getWorld(worldName), startX - (deltaX), (startY + 1), startZ + deltaZ);
+
+            Location stoneL1 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(innerPlotSize + offsetX, direction),
+                    (startY - 5), 
+                    startZ + getZ(innerPlotSize + offsetZ, direction)
+            );
+            Location stoneL2 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(1 + offsetX, direction),
+                    1, 
+                    startZ + getZ(1 + offsetZ, direction)
+            );
+            setBlocks(stoneL1, stoneL2, Material.STONE);
+
+            Location dirtL1 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(innerPlotSize + offsetX, direction), 
+                    (startY - 2), 
+                    startZ + getZ(innerPlotSize + offsetZ, direction)
+            );
+            Location dirtL2 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(1 + offsetX, direction),
+                    (startY - 4), 
+                    startZ + getZ(1 + offsetZ, direction)
+            );
+            setBlocks(dirtL1, dirtL2, Material.DIRT);
+
+            Location grassL1 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(innerPlotSize + offsetX, direction), 
+                    (startY - 1), 
+                    startZ + getZ(innerPlotSize + offsetZ, direction)
+            );
+            Location grassL2 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(1 + offsetX, direction),
+                    (startY - 1), 
+                    startZ + getZ(1 + offsetZ, direction)
+            );
+            setBlocks(grassL1, grassL2, Material.GRASS);
+
+            Location stepL1 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX((outerPlotSize - 1) + offsetX, direction), 
+                    startY,
+                    startZ + getZ((outerPlotSize - 1) + offsetZ, direction)
+            );
+            Location stepL2 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(offsetX, direction), 
+                    startY, 
+                    startZ + getZ(offsetZ, direction)
+            );
+            setBlocks(stepL1, stepL2, Material.STEP);
+
+            Location airL1 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(innerPlotSize + offsetX, direction), 
+                    255, 
+                    startZ + getZ(innerPlotSize + offsetZ, direction)
+            );
+            Location airL2 = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(1 + offsetX, direction),
+                    startY, 
+                    startZ + getZ(1 + offsetZ, direction)
+            );
+            setBlocks(airL1, airL2, Material.AIR);
+
+            Location glowstoneL = new Location(getServer().getWorld(worldName), startX - (offsetX), startY, startZ + offsetZ);
+            getServer().getWorld(worldName).getBlockAt(glowstoneL).setType(Material.GLOWSTONE);
+
+            Location plotSign = new Location(getServer().getWorld(worldName), startX - (offsetX), (startY + 1), startZ + offsetZ);
             plotSign.getBlock().setType(Material.SIGN_POST);
             plotSign.getBlock().setData((byte) 10);
-            Sign sign;
-            sign = (Sign) plotSign.getBlock().getState();
+
+            Sign sign = (Sign) plotSign.getBlock().getState();
             String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(number + 1) + ChatColor.DARK_BLUE + ">");
             sign.setLine(0, fancyPlotNumber);
             sign.setLine(2, "");
             sign.update();
 
             RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
-            BlockVector bv1 = new BlockVector(l2.getBlockX(), l2.getBlockY(), l2.getBlockZ());
-            BlockVector bv2 = new BlockVector(l9.getBlockX(), l9.getBlockY(), l9.getBlockZ());
+            BlockVector bv1 = new BlockVector(stoneL2.getBlockX(), stoneL2.getBlockY(), stoneL2.getBlockZ());
+            BlockVector bv2 = new BlockVector(airL1.getBlockX(), airL1.getBlockY(), airL1.getBlockZ());
             ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);
+
             List<BlockVector2D> bv2dList = new ArrayList<>();
-            bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ()));
-            bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ() - plotWidth + 1));
-            bv2dList.add(new BlockVector2D(l8.getBlockX() - 1, l8.getBlockZ()));
-            bv2dList.add(new BlockVector2D(l8.getBlockX(), l8.getBlockZ() + 1));
-            bv2dList.add(new BlockVector2D(l7.getBlockX() + plotWidth - 1, l7.getBlockZ()));
-            ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, l7.getBlockY(), l7.getBlockY());
+            bv2dList.add(new BlockVector2D(stepL1.getBlockX(), stepL1.getBlockZ()));
+            bv2dList.add(new BlockVector2D(stepL1.getBlockX(), stepL1.getBlockZ() - outerPlotSize + 1));
+            bv2dList.add(new BlockVector2D(stepL2.getBlockX() - 1, stepL2.getBlockZ()));
+            bv2dList.add(new BlockVector2D(stepL2.getBlockX(), stepL2.getBlockZ() + 1));
+            bv2dList.add(new BlockVector2D(stepL1.getBlockX() + outerPlotSize - 1, stepL1.getBlockZ()));
+            ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, stepL1.getBlockY(), stepL1.getBlockY());
+
             pcr1.setPriority(1);
             ppr1.setPriority(1);
             rgm.addRegion(pcr1);
@@ -706,7 +790,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 
     private void createCompleteRegion() {
         int pathWidth = getConfig().getInt("layout.pathwidth");
-        int plotWidth = getConfig().getInt("layout.plotwidth");
+        int plotWidth = getConfig().getInt("layout.plotsize");
         int plotsPerRow = getConfig().getInt("layout.plotsperrow");
         String worldName = getConfig().getString("startblock.world");
         int startX = getConfig().getInt("startblock.x");

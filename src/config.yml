@@ -10,8 +10,8 @@ buildoff:
   maxcontestants: 36
   duration: "24 hours"
 layout:
-  #plotwidth is counted including the stone slab borders
-  plotwidth: 32
+  #plotsize is counted including the stone slab borders
+  plotsize: 32
   pathwidth: 4
   plotsperrow: 6
 startblock:
