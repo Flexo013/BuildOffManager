@@ -752,10 +752,20 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             );
             setBlocks(airL1, airL2, Material.AIR);
 
-            Location glowstoneL = new Location(getServer().getWorld(worldName), startX - (offsetX), startY, startZ + offsetZ);
+            Location glowstoneL = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(offsetX, direction), 
+                    startY, 
+                    startZ + getZ(offsetZ, direction)
+            );
             getServer().getWorld(worldName).getBlockAt(glowstoneL).setType(Material.GLOWSTONE);
 
-            Location plotSign = new Location(getServer().getWorld(worldName), startX - (offsetX), (startY + 1), startZ + offsetZ);
+            Location plotSign = new Location(
+                    getServer().getWorld(worldName), 
+                    startX + getX(offsetX, direction), 
+                    (startY + 1), 
+                    startZ + getZ(offsetZ, direction)
+            );
             plotSign.getBlock().setType(Material.SIGN_POST);
             plotSign.getBlock().setData((byte) 10);
 
