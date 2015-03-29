@@ -124,7 +124,6 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 				sender.sendMessage(PreFix + ChatColor.GOLD + "Currently nobody can join the Build Off.");
 			} else {
 				String playerString;
-				boolean playerOnline;
 				playerString = PreFix + ChatColor.GOLD + "List of online players:" + ChatColor.YELLOW;
 				for (Player player : sender.getServer().getOnlinePlayers()) {
 					String playerName = player.getName();
@@ -142,7 +141,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 		// Allows a player to join the current Build Off
 		if (cmd.getName().equalsIgnoreCase("join")) {
 			if (!(sender instanceof Player)) {
-				sender.sendMessage("The /join command can only be used by players.");
+				sender.sendMessage(PreFix + "The /join command can only be used by players.");
 			} else {
 				if (AfterBuildOff) {
 					sender.sendMessage(PreFix + ChatColor.RED + "The Build Off has ended. You cannot join anymore.");
