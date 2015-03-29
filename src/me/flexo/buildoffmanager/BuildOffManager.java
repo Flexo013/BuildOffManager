@@ -814,7 +814,11 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 				255,
 				glowstoneL.getBlockZ() + getZ(innerPlotSize, direction)
 		);
-		ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);
+		ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(
+                "plotbig" + number, 
+                bv1, 
+                bv2
+        );
 
 		List<BlockVector2D> bv2dList = new ArrayList<>();
 		bv2dList.add(new BlockVector2D(
@@ -842,7 +846,12 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 				glowstoneL.getBlockZ() + getZ(outerPlotSize - 1, direction)
 		));
 
-		ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, glowstoneL.getBlockY(), glowstoneL.getBlockY());
+		ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(
+                "plotsmall" + number, 
+                bv2dList, 
+                glowstoneL.getBlockY(), 
+                glowstoneL.getBlockY()
+        );
 
 		pcr1.setPriority(1);
 		ppr1.setPriority(1);
