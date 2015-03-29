@@ -10,10 +10,11 @@ buildoff:
   maxcontestants: 36
   duration: "24 hours"
 layout:
-  #plotwidth is counted including the stone slab borders
-  plotwidth: 32
+  #plotsize is counted including the stone slab borders
+  plotsize: 32
   pathwidth: 4
   plotsperrow: 6
+  direction: 1
 startblock:
   #These are the worldname and coordinates of the glowstone block of the first plot
   world: world
@@ -26,6 +27,7 @@ boardstartblock:
   x: -6
   y: 65
   z: -8
+  direction: 2
 themesignblock:
   #These are the worldname and coordinates of sign that displays the theme
   world: world
