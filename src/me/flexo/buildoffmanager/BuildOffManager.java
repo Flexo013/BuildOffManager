@@ -655,7 +655,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 	}
 
 	private void initializePlot(int number) {
-		int direction = 2;
+		int direction = getConfig().getInt("layout.direction");
 		int pathWidth = getConfig().getInt("layout.pathwidth");
 		int outerPlotSize = getConfig().getInt("layout.plotsize");
 		int plotsPerRow = getConfig().getInt("layout.plotsperrow");

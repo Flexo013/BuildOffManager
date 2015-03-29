@@ -14,6 +14,7 @@ layout:
   plotsize: 32
   pathwidth: 4
   plotsperrow: 6
+  direction: 0
 startblock:
   #These are the worldname and coordinates of the glowstone block of the first plot
   world: world
