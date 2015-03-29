@@ -27,7 +27,7 @@ boardstartblock:
   x: -6
   y: 65
   z: -8
-  direction: 2
+  direction: 1
 themesignblock:
   #These are the worldname and coordinates of sign that displays the theme
   world: world
