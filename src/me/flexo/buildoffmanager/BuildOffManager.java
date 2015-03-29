@@ -279,12 +279,22 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 			int maxPlotNumber = getConfig().getInt("buildoff.maxcontestants") - 1;
 			int plotsPerRow = getConfig().getInt("layout.plotsperrow");
 			String worldName = getConfig().getString("boardstartblock.world");
-			int boardStartX = getConfig().getInt("boardstartblock.x");
+			int direction = getConfig().getInt("boardstartblock.direction");
+            int boardStartX = getConfig().getInt("boardstartblock.x");
 			int boardStartY = getConfig().getInt("boardstartblock.y");
 			int boardStartZ = getConfig().getInt("boardstartblock.z");
-			Location l1, l2;
-			l1 = new Location(getServer().getWorld(worldName), boardStartX, boardStartY, boardStartZ);
-			l2 = new Location(getServer().getWorld(worldName), boardStartX - (plotsPerRow - 1), boardStartY + ((maxPlotNumber / plotsPerRow) * 1), boardStartZ);
+			Location l1 = new Location(
+                    getServer().getWorld(worldName), 
+                    boardStartX, 
+                    boardStartY, 
+                    boardStartZ
+            );
+			Location l2 = new Location(
+                    getServer().getWorld(worldName), 
+                    boardStartX + getX(plotsPerRow - 1, direction), 
+                    boardStartY + ((maxPlotNumber / plotsPerRow) * 1), 
+                    boardStartZ
+            );
 			//end cuboid calc
 			Cuboid signs = new Cuboid(l1, l2);
 			if (signs.getBlocks().contains(event.getClickedBlock()) && (event.getClickedBlock().getType() == Material.WALL_SIGN)) {
