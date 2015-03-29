@@ -752,22 +752,22 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 			);
 			setBlocks(airL1, airL2, Material.AIR);
 
-            Location glowstoneL = new Location(
-                    getServer().getWorld(worldName), 
-                    startX + getX(offsetX, direction), 
-                    startY, 
-                    startZ + getZ(offsetZ, direction)
-            );
-            getServer().getWorld(worldName).getBlockAt(glowstoneL).setType(Material.GLOWSTONE);
+			Location glowstoneL = new Location(
+					getServer().getWorld(worldName),
+					startX + getX(offsetX, direction),
+					startY,
+					startZ + getZ(offsetZ, direction)
+			);
+			getServer().getWorld(worldName).getBlockAt(glowstoneL).setType(Material.GLOWSTONE);
 
-            Location plotSign = new Location(
-                    getServer().getWorld(worldName), 
-                    startX + getX(offsetX, direction), 
-                    (startY + 1), 
-                    startZ + getZ(offsetZ, direction)
-            );
-            plotSign.getBlock().setType(Material.SIGN_POST);
-            plotSign.getBlock().setData((byte) 10);
+			Location plotSign = new Location(
+					getServer().getWorld(worldName),
+					startX + getX(offsetX, direction),
+					(startY + 1),
+					startZ + getZ(offsetZ, direction)
+			);
+			plotSign.getBlock().setType(Material.SIGN_POST);
+			plotSign.getBlock().setData((byte) 10);
 
 			Sign sign = (Sign) plotSign.getBlock().getState();
 			String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(number + 1) + ChatColor.DARK_BLUE + ">");
@@ -791,24 +791,28 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 
 			List<BlockVector2D> bv2dList = new ArrayList<>();
 			bv2dList.add(new BlockVector2D(
-					stepL1.getBlockX(),
-					stepL1.getBlockZ()
+					glowstoneL.getBlockX() + getX(outerPlotSize - 1, direction),
+					glowstoneL.getBlockZ() + getZ(outerPlotSize - 1, direction)
 			));
 			bv2dList.add(new BlockVector2D(
-					stepL1.getBlockX(),
-					stepL1.getBlockZ() - getZ(outerPlotSize - 1, direction)
+					glowstoneL.getBlockX() + getX(outerPlotSize - 1, direction),
+					glowstoneL.getBlockZ()
 			));
 			bv2dList.add(new BlockVector2D(
-					stepL2.getBlockX() + getX(1, direction),
-					stepL2.getBlockZ()
+					glowstoneL.getBlockX() + getX(1, direction),
+					glowstoneL.getBlockZ()
 			));
 			bv2dList.add(new BlockVector2D(
-					stepL2.getBlockX(),
-					stepL2.getBlockZ() + getZ(1, direction)
+					glowstoneL.getBlockX() + getX(1, direction),
+					glowstoneL.getBlockZ() + getZ(1, direction)
 			));
 			bv2dList.add(new BlockVector2D(
-					stepL1.getBlockX() - getX(outerPlotSize - 1, direction),
-					stepL1.getBlockZ()
+					glowstoneL.getBlockX(),
+					glowstoneL.getBlockZ() + getZ(1, direction)
+			));
+			bv2dList.add(new BlockVector2D(
+					glowstoneL.getBlockX(),
+					glowstoneL.getBlockZ() + getZ(outerPlotSize - 1, direction)
 			));
 			ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, stepL1.getBlockY(), stepL1.getBlockY());
 
