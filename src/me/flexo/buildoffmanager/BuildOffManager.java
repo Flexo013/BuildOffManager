@@ -47,7 +47,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 	public void onEnable() {
 		this.saveDefaultConfig();
 		int direction = getConfig().getInt("layout.direction");
-		if(direction > 3 || direction < 0){
+		if (direction > 3 || direction < 0) {
 			getConfig().set("layout.direction", 0);
 			log.severe(PreFix + "Illegal direction found in config.yml: layout.direction. Reset to default value (0)");
 		}
@@ -554,78 +554,44 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 	}
 
 	private void resetPlot(int number) {
+		int direction = getConfig().getInt("layout.direction");
+		String worldName = getConfig().getString("startblock.world");
+		int outerPlotSize = getConfig().getInt("layout.plotsize");
+		int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+		final int innerPlotSize = outerPlotSize - 2;
+		Location glowstoneL = setPlotBlocks(number);
+
+		//Make sign say [RESET]
+		Location boardSign;
+		worldName = getConfig().getString("boardstartblock.world");
+		int boardStartX = getConfig().getInt("boardstartblock.x");
+		int boardStartY = getConfig().getInt("boardstartblock.y");
+		int boardStartZ = getConfig().getInt("boardstartblock.z");
+		boardSign = new Location(
+				getServer().getWorld(worldName),
+				boardStartX - ((number % plotsPerRow) * 1),
+				boardStartY + ((number / plotsPerRow) * 1),
+				boardStartZ
+		);
+		boardSign.getBlock().setType(Material.WALL_SIGN);
+		boardSign.getBlock().setData((byte) 2);
+		Sign sign2;
+		sign2 = (Sign) boardSign.getBlock().getState();
+		sign2.setLine(1, (ChatColor.GRAY + "[RESET]"));
+		sign2.update();
+
+		//Reset the regions
+		RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
+		DefaultDomain dd = new DefaultDomain();
+		ProtectedRegion plotBig = rgm.getRegion("plotbig" + number);
+		ProtectedRegion plotSmall = rgm.getRegion("plotsmall" + number);
+		if (plotBig != null && plotSmall != null) {
+			plotBig.setMembers(dd);
+			plotSmall.setMembers(dd);
+		}else{
+			log.log(Level.SEVERE, "{0}Contest regions of plot <{1}> were not found. ", new Object[]{PreFix, number+1});
+		}
 		try {
-			int pathWidth = getConfig().getInt("layout.pathwidth");
-			int plotWidth = getConfig().getInt("layout.plotsize");
-			int plotsPerRow = getConfig().getInt("layout.plotsperrow");
-			String worldName = getConfig().getString("startblock.world");
-			int startX = getConfig().getInt("startblock.x");
-			int startY = getConfig().getInt("startblock.y");
-			int startZ = getConfig().getInt("startblock.z");
-			final int deltaX = (number % plotsPerRow) * (plotWidth + pathWidth);
-			final int deltaZ = (number / plotsPerRow) * (plotWidth + pathWidth);
-			final int deltaPlot = plotWidth - 2;
-			Location bedrockL1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), 0, (startZ + deltaPlot) + deltaZ);
-			Location bedrockL2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 0, (startZ + 1) + deltaZ);
-			setBlocks(bedrockL1, bedrockL2, Material.BEDROCK);
-			Location l1 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 5), (startZ + deltaPlot) + deltaZ);
-			Location l2 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), 1, (startZ + 1) + deltaZ);
-			setBlocks(l1, l2, Material.STONE);
-			Location l3 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 2), (startZ + deltaPlot) + deltaZ);
-			Location l4 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 4), (startZ + 1) + deltaZ);
-			setBlocks(l3, l4, Material.DIRT);
-			Location l5 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), (startY - 1), (startZ + deltaPlot) + deltaZ);
-			Location l6 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), (startY - 1), (startZ + 1) + deltaZ);
-			setBlocks(l5, l6, Material.GRASS);
-			Location l7 = new Location(getServer().getWorld(worldName), (startX - (plotWidth - 1)) - (deltaX), startY, (startZ + (plotWidth - 1)) + deltaZ);
-			Location l8 = new Location(getServer().getWorld(worldName), startX - (deltaX), 64, startZ + deltaZ);
-			setBlocks(l7, l8, Material.STEP);
-			Location l9 = new Location(getServer().getWorld(worldName), (startX - deltaPlot) - (deltaX), 255, (startZ + deltaPlot) + deltaZ);
-			Location l10 = new Location(getServer().getWorld(worldName), (startX - 1) - (deltaX), startY, (startZ + 1) + deltaZ);
-			setBlocks(l9, l10, Material.AIR);
-			Location l11 = new Location(getServer().getWorld(worldName), startX - (deltaX), startY, startZ + deltaZ);
-			getServer().getWorld(worldName).getBlockAt(l11).setType(Material.GLOWSTONE);
-			Location plotSign;
-			plotSign = new Location(getServer().getWorld(worldName), startX - (deltaX), (startY + 1), startZ + deltaZ);
-			plotSign.getBlock().setType(Material.SIGN_POST);
-			plotSign.getBlock().setData((byte) 10);
-			Sign sign;
-			sign = (Sign) plotSign.getBlock().getState();
-			String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(number + 1) + ChatColor.DARK_BLUE + ">");
-			sign.setLine(0, fancyPlotNumber);
-			sign.setLine(2, "");
-			sign.update();
-
-			//Make sign say [RESET]
-			Location boardSign;
-			worldName = getConfig().getString("boardstartblock.world");
-			int boardStartX = getConfig().getInt("boardstartblock.x");
-			int boardStartY = getConfig().getInt("boardstartblock.y");
-			int boardStartZ = getConfig().getInt("boardstartblock.z");
-			boardSign = new Location(getServer().getWorld(worldName), boardStartX - ((number % plotsPerRow) * 1), boardStartY + ((number / plotsPerRow) * 1), boardStartZ);
-			boardSign.getBlock().setType(Material.WALL_SIGN);
-			boardSign.getBlock().setData((byte) 2);
-			Sign sign2;
-			sign2 = (Sign) boardSign.getBlock().getState();
-			sign2.setLine(1, (ChatColor.GRAY + "[RESET]"));
-			sign2.update();
-
-			//Reset the regions
-			RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
-			BlockVector bv1 = new BlockVector(l2.getBlockX(), l2.getBlockY(), l2.getBlockZ());
-			BlockVector bv2 = new BlockVector(l9.getBlockX(), l9.getBlockY(), l9.getBlockZ());
-			ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);
-			List<BlockVector2D> bv2dList = new ArrayList<>();
-			bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ()));
-			bv2dList.add(new BlockVector2D(l7.getBlockX(), l7.getBlockZ() - plotWidth + 1));
-			bv2dList.add(new BlockVector2D(l8.getBlockX() - 1, l8.getBlockZ()));
-			bv2dList.add(new BlockVector2D(l8.getBlockX(), l8.getBlockZ() + 1));
-			bv2dList.add(new BlockVector2D(l7.getBlockX() + plotWidth - 1, l7.getBlockZ()));
-			ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, l7.getBlockY(), l7.getBlockY());
-			pcr1.setPriority(1);
-			ppr1.setPriority(1);
-			rgm.addRegion(pcr1);
-			rgm.addRegion(ppr1);
 			rgm.save();
 		} catch (StorageException ex) {
 			Logger.getLogger(BuildOffManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -674,7 +640,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 
 	}
 
-	private void initializePlot(int number) {
+	private Location setPlotBlocks(int number) {
 		int direction = getConfig().getInt("layout.direction");
 		int pathWidth = getConfig().getInt("layout.pathwidth");
 		int outerPlotSize = getConfig().getInt("layout.plotsize");
@@ -793,18 +759,27 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 		sign.setLine(0, fancyPlotNumber);
 		sign.setLine(2, "");
 		sign.update();
+		return glowstoneL;
+	}
+
+	private void initializePlot(int number) {
+		int direction = getConfig().getInt("layout.direction");
+		String worldName = getConfig().getString("startblock.world");
+		int outerPlotSize = getConfig().getInt("layout.plotsize");
+		final int innerPlotSize = outerPlotSize - 2;
+		Location glowstoneL = setPlotBlocks(number);
 
 		RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
 
 		BlockVector bv1 = new BlockVector(
-				stoneL2.getBlockX(),
-				stoneL2.getBlockY(),
-				stoneL2.getBlockZ()
+				glowstoneL.getBlockX() + getX(1, direction),
+				1,
+				glowstoneL.getBlockZ() + getZ(1, direction)
 		);
 		BlockVector bv2 = new BlockVector(
-				airL1.getBlockX(),
-				airL1.getBlockY(),
-				airL1.getBlockZ()
+				glowstoneL.getBlockX() + getX(innerPlotSize, direction),
+				255,
+				glowstoneL.getBlockZ() + getZ(innerPlotSize, direction)
 		);
 		ProtectedCuboidRegion pcr1 = new ProtectedCuboidRegion(("plotbig" + Integer.toString(number)), bv1, bv2);
 
@@ -855,22 +830,22 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 		String worldName = getConfig().getString("startblock.world");
 		int startX = getConfig().getInt("startblock.x");
 		int startZ = getConfig().getInt("startblock.z");
-		
+
 		RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
-		
+
 		BlockVector bv5 = new BlockVector(
-				startX, 
-				0, 
+				startX,
+				0,
 				startZ
 		);
-		
+
 		int sizetemp = (plotsPerRow * plotSize) + ((plotsPerRow - 1) * pathWidth) - 1;
 		BlockVector bv6 = new BlockVector(
-				startX + getX(sizetemp, direction), 
-				255, 
+				startX + getX(sizetemp, direction),
+				255,
 				startZ + getZ(sizetemp, direction)
 		);
-		
+
 		ProtectedCuboidRegion pcr3 = new ProtectedCuboidRegion("contestcomplete", bv5, bv6);
 		pcr3.setPriority(2);
 		rgm.addRegion(pcr3);
