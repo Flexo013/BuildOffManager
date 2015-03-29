@@ -432,19 +432,23 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 	private void preparePlotSign(CommandSender sender) {
 		int plotNumber;
 		plotNumber = BuildOffContestants.indexOf(sender.getName());
-		Location boardSign;
+		int direction = getConfig().getInt("layout.direction");
 		int pathWidth = getConfig().getInt("layout.pathwidth");
-		int plotWidth = getConfig().getInt("layout.plotsize");
+		int plotSize = getConfig().getInt("layout.plotsize");
 		int plotsPerRow = getConfig().getInt("layout.plotsperrow");
 		String worldName = getConfig().getString("startblock.world");
 		int startX = getConfig().getInt("startblock.x");
 		int startY = getConfig().getInt("startblock.y");
 		int startZ = getConfig().getInt("startblock.z");
-		boardSign = new Location(getServer().getWorld(worldName), startX - ((plotNumber % plotsPerRow) * (plotWidth + pathWidth)), (startY + 1), startZ + ((plotNumber / plotsPerRow) * (plotWidth + pathWidth)));
-		boardSign.getBlock().setType(Material.SIGN_POST);
-		boardSign.getBlock().setData((byte) 10);
-		Sign sign;
-		sign = (Sign) boardSign.getBlock().getState();
+		Location plotSign = new Location(
+				getServer().getWorld(worldName),
+				startX + getX((plotNumber % plotsPerRow) * (plotSize + pathWidth), direction),
+				(startY + 1),
+				startZ + getZ((plotNumber / plotsPerRow) * (plotSize + pathWidth), direction)
+		);
+		plotSign.getBlock().setType(Material.SIGN_POST);
+		plotSign.getBlock().setData(getSignDirection(direction));
+		Sign sign = (Sign) plotSign.getBlock().getState();
 		String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(plotNumber + 1) + ChatColor.DARK_BLUE + ">");
 		sign.setLine(0, fancyPlotNumber);
 		sign.setLine(2, sender.getName());
@@ -454,15 +458,20 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 	private void updateBoard(CommandSender sender) {
 		int plotNumber;
 		int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+		int direction = getConfig().getInt("boardstartblock.direction");
 		String worldName = getConfig().getString("boardstartblock.world");
 		int boardStartX = getConfig().getInt("boardstartblock.x");
 		int boardStartY = getConfig().getInt("boardstartblock.y");
 		int boardStartZ = getConfig().getInt("boardstartblock.z");
 		plotNumber = BuildOffContestants.indexOf(sender.getName());
-		Location boardSign;
-		boardSign = new Location(getServer().getWorld(worldName), boardStartX - ((plotNumber % plotsPerRow) * 1), boardStartY + ((plotNumber / plotsPerRow) * 1), boardStartZ);
+		Location boardSign = new Location(
+				getServer().getWorld(worldName),
+				boardStartX + getX((plotNumber % plotsPerRow) * 1, direction),
+				boardStartY + (plotNumber / plotsPerRow) * 1,
+				boardStartZ
+		);
 		boardSign.getBlock().setType(Material.WALL_SIGN);
-		boardSign.getBlock().setData((byte) 2);
+		boardSign.getBlock().setData(getBoardSignDirection(direction));
 		Sign sign;
 		sign = (Sign) boardSign.getBlock().getState();
 		String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(plotNumber + 1) + ChatColor.DARK_BLUE + ">");
@@ -473,29 +482,38 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 
 	private void removeOneBoardSign(int plotNumber) {
 		int plotsPerRow = getConfig().getInt("layout.plotsperrow");
+		int direction = getConfig().getInt("boardstartblock.direction");
 		String worldName = getConfig().getString("boardstartblock.world");
 		int boardStartX = getConfig().getInt("boardstartblock.x");
 		int boardStartY = getConfig().getInt("boardstartblock.y");
 		int boardStartZ = getConfig().getInt("boardstartblock.z");
-		Location boardSign;
-		boardSign = new Location(getServer().getWorld(worldName), boardStartX - ((plotNumber % plotsPerRow) * 1), boardStartY + ((plotNumber / plotsPerRow) * 1), boardStartZ);
+		Location boardSign = new Location(
+				getServer().getWorld(worldName),
+				boardStartX + getX((plotNumber % plotsPerRow) * 1, direction),
+				boardStartY + ((plotNumber / plotsPerRow) * 1),
+				boardStartZ);
 		boardSign.getBlock().setType(Material.AIR);
 	}
 
 	private void updateThemeSign() {
-		Location loc;
+		
+		int direction = getConfig().getInt("boardstartblock.direction");
 		String worldName = getConfig().getString("themesignblock.world");
 		int themeBlockX = getConfig().getInt("themesignblock.x");
 		int themeBlockY = getConfig().getInt("themesignblock.y");
 		int themeBlockZ = getConfig().getInt("themesignblock.z");
-		loc = new Location(getServer().getWorld(worldName), themeBlockX, themeBlockY, themeBlockZ);
+		Location loc = new Location(
+				getServer().getWorld(worldName),
+				themeBlockX,
+				themeBlockY,
+				themeBlockZ
+		);
 		loc.getBlock().setType(Material.WALL_SIGN);
-		loc.getBlock().setData((byte) 2);
-		String subString1 = getConfig().getString("theme");
-		Sign sign;
-		sign = (Sign) loc.getBlock().getState();
+		loc.getBlock().setData(getBoardSignDirection(direction));
+		String themeString = getConfig().getString("theme");
+		Sign sign = (Sign) loc.getBlock().getState();
 		sign.setLine(0, "=-=-=-=-=-=-=-=");
-		sign.setLine(1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + subString1);
+		sign.setLine(1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + themeString);
 		sign.setLine(2, ChatColor.DARK_AQUA + "");
 		sign.setLine(3, "=-=-=-=-=-=-=-=");
 		sign.update();
@@ -523,28 +541,37 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 
 	private void resetBoard() {
 		int maxPlotNumber = getConfig().getInt("buildoff.maxcontestants") - 1;
+		int direction = getConfig().getInt("boardstartblock.direction");
 		int plotsPerRow = getConfig().getInt("layout.plotsperrow");
 		String worldName = getConfig().getString("boardstartblock.world");
 		int boardStartX = getConfig().getInt("boardstartblock.x");
 		int boardStartY = getConfig().getInt("boardstartblock.y");
 		int boardStartZ = getConfig().getInt("boardstartblock.z");
-		Location l1, l2;
-		l1 = new Location(getServer().getWorld(worldName), boardStartX, boardStartY, boardStartZ);
-		l2 = new Location(getServer().getWorld(worldName), boardStartX - (plotsPerRow - 1), boardStartY + ((maxPlotNumber / plotsPerRow) * 1), boardStartZ);
+		Location l1 = new Location(
+				getServer().getWorld(worldName),
+				boardStartX,
+				boardStartY,
+				boardStartZ
+		);
+		Location l2 = new Location(
+				getServer().getWorld(worldName),
+				boardStartX + getX(plotsPerRow - 1, direction),
+				boardStartY + ((maxPlotNumber / plotsPerRow) * 1),
+				boardStartZ
+		);
 		setBlocks(l1, l2, Material.AIR);
 	}
 
 	private void resetThemeSign() {
-		Location loc;
 		String worldName = getConfig().getString("themesignblock.world");
+		int direction = getConfig().getInt("boardstartblock.direction");
 		int themeBlockX = getConfig().getInt("themesignblock.x");
 		int themeBlockY = getConfig().getInt("themesignblock.y");
 		int themeBlockZ = getConfig().getInt("themesignblock.z");
-		loc = new Location(getServer().getWorld(worldName), themeBlockX, themeBlockY, themeBlockZ);
+		Location loc = new Location(getServer().getWorld(worldName), themeBlockX, themeBlockY, themeBlockZ);
 		loc.getBlock().setType(Material.WALL_SIGN);
-		loc.getBlock().setData((byte) 2);
-		Sign sign;
-		sign = (Sign) loc.getBlock().getState();
+		loc.getBlock().setData(getBoardSignDirection(direction));
+		Sign sign = (Sign) loc.getBlock().getState();
 		sign.setLine(0, "=-=-=-=-=-=-=-=");
 		sign.setLine(1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Secret till");
 		sign.setLine(2, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "the start");
@@ -553,31 +580,25 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 	}
 
 	private void resetPlot(int number) {
-		int direction = getConfig().getInt("layout.direction");
-		String worldName = getConfig().getString("startblock.world");
-		int outerPlotSize = getConfig().getInt("layout.plotsize");
-		int plotsPerRow = getConfig().getInt("layout.plotsperrow");
-		final int innerPlotSize = outerPlotSize - 2;
-		Location glowstoneL = setPlotBlocks(number);
+		setPlotBlocks(number);
 
 		//Make sign say [RESET]
-		Location boardSign;
-		worldName = getConfig().getString("boardstartblock.world");
+		String worldName = getConfig().getString("boardstartblock.world");
+		int plotsPerRow = getConfig().getInt("layout.plotsperrow");
 		int boardStartX = getConfig().getInt("boardstartblock.x");
 		int boardStartY = getConfig().getInt("boardstartblock.y");
 		int boardStartZ = getConfig().getInt("boardstartblock.z");
-		boardSign = new Location(
+		Location boardSignLoc = new Location(
 				getServer().getWorld(worldName),
 				boardStartX - ((number % plotsPerRow) * 1),
 				boardStartY + ((number / plotsPerRow) * 1),
 				boardStartZ
 		);
-		boardSign.getBlock().setType(Material.WALL_SIGN);
-		boardSign.getBlock().setData((byte) 2);
-		Sign sign2;
-		sign2 = (Sign) boardSign.getBlock().getState();
-		sign2.setLine(1, (ChatColor.GRAY + "[RESET]"));
-		sign2.update();
+		boardSignLoc.getBlock().setType(Material.WALL_SIGN);
+		boardSignLoc.getBlock().setData((byte) 2);
+		Sign sign = (Sign) boardSignLoc.getBlock().getState();
+		sign.setLine(1, (ChatColor.GRAY + "[RESET]"));
+		sign.update();
 
 		//Reset the regions
 		RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
@@ -587,8 +608,8 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 		if (plotBig != null && plotSmall != null) {
 			plotBig.setMembers(dd);
 			plotSmall.setMembers(dd);
-		}else{
-			log.log(Level.SEVERE, "{0}Contest regions of plot <{1}> were not found. ", new Object[]{PreFix, number+1});
+		} else {
+			log.log(Level.SEVERE, "{0}Contest regions of plot <{1}> were not found. ", new Object[]{PreFix, number + 1});
 		}
 		try {
 			rgm.save();
@@ -636,7 +657,20 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 				return (byte) 14;
 		}
 		return 0;
+	}
 
+	private byte getBoardSignDirection(int direction) {
+		switch (direction) {
+			case 0:
+				return (byte) 1;
+			case 1:
+				return (byte) 0;
+			case 2:
+				return (byte) 2;
+			case 3:
+				return (byte) 3;
+		}
+		return 0;
 	}
 
 	private Location setPlotBlocks(int number) {
