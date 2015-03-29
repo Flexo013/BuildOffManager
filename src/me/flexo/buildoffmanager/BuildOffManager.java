@@ -46,6 +46,11 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
+		int direction = getConfig().getInt("layout.direction");
+		if(direction > 3 || direction < 0){
+			getConfig().set("layout.direction", 0);
+			log.severe(PreFix + "Illegal direction found in config.yml: layout.direction. Reset to default value (0)");
+		}
 		BuildOffContestants = (ArrayList) getConfig().getStringList("contestants");
 		fillContestantsList();
 		JoinableBuildOff = getConfig().getBoolean("buildoff.joinable");
@@ -654,6 +659,21 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 		return z;
 	}
 
+	private byte getSignDirection(int direction) {
+		switch (direction) {
+			case 0:
+				return (byte) 6;
+			case 1:
+				return (byte) 2;
+			case 2:
+				return (byte) 10;
+			case 3:
+				return (byte) 14;
+		}
+		return 0;
+
+	}
+
 	private void initializePlot(int number) {
 		int direction = getConfig().getInt("layout.direction");
 		int pathWidth = getConfig().getInt("layout.pathwidth");
@@ -766,7 +786,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 				startZ + getZ(offsetZ, direction)
 		);
 		plotSign.getBlock().setType(Material.SIGN_POST);
-		plotSign.getBlock().setData((byte) 10);
+		plotSign.getBlock().setData(getSignDirection(direction));
 
 		Sign sign = (Sign) plotSign.getBlock().getState();
 		String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(number + 1) + ChatColor.DARK_BLUE + ">");
@@ -813,7 +833,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 				glowstoneL.getBlockX(),
 				glowstoneL.getBlockZ() + getZ(outerPlotSize - 1, direction)
 		));
-		
+
 		ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, glowstoneL.getBlockY(), glowstoneL.getBlockY());
 
 		pcr1.setPriority(1);
@@ -828,20 +848,33 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 	}
 
 	private void createCompleteRegion() {
+		int direction = getConfig().getInt("layout.direction");
 		int pathWidth = getConfig().getInt("layout.pathwidth");
-		int plotWidth = getConfig().getInt("layout.plotsize");
+		int plotSize = getConfig().getInt("layout.plotsize");
 		int plotsPerRow = getConfig().getInt("layout.plotsperrow");
 		String worldName = getConfig().getString("startblock.world");
 		int startX = getConfig().getInt("startblock.x");
 		int startZ = getConfig().getInt("startblock.z");
+		
 		RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
-		BlockVector bv5 = new BlockVector(startX, 0, startZ);
-		int sizetemp = (plotsPerRow * plotWidth) + ((plotsPerRow - 1) * pathWidth) - 1;
-		BlockVector bv6 = new BlockVector((startX - sizetemp), 255, startZ + sizetemp);
+		
+		BlockVector bv5 = new BlockVector(
+				startX, 
+				0, 
+				startZ
+		);
+		
+		int sizetemp = (plotsPerRow * plotSize) + ((plotsPerRow - 1) * pathWidth) - 1;
+		BlockVector bv6 = new BlockVector(
+				startX + getX(sizetemp, direction), 
+				255, 
+				startZ + getZ(sizetemp, direction)
+		);
+		
 		ProtectedCuboidRegion pcr3 = new ProtectedCuboidRegion("contestcomplete", bv5, bv6);
 		pcr3.setPriority(2);
 		rgm.addRegion(pcr3);
-		pcr3.setFlag(DefaultFlag.BUILD, State.DENY);
+		pcr3.setFlag(DefaultFlag.PASSTHROUGH, State.DENY);
 		try {
 			rgm.save();
 		} catch (StorageException ex) {
