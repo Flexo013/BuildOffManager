@@ -813,6 +813,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 				glowstoneL.getBlockX(),
 				glowstoneL.getBlockZ() + getZ(outerPlotSize - 1, direction)
 		));
+		
 		ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(("plotsmall" + Integer.toString(number)), bv2dList, glowstoneL.getBlockY(), glowstoneL.getBlockY());
 
 		pcr1.setPriority(1);
