@@ -606,7 +606,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         int boardStartZ = getConfig().getInt("boardstartblock.z");
         Location boardSignLoc = new Location(
                 getServer().getWorld(worldName),
-                boardStartX - ((number % plotsPerRow) * 1),
+                boardStartX + getX((number % plotsPerRow) * 1, direction),
                 boardStartY + ((number / plotsPerRow) * 1),
                 boardStartZ
         );
