@@ -539,14 +539,14 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         plotNumber = BuildOffContestants.indexOf(name);
         String worldName = getConfig().getString("startblock.world");
         RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
-        ProtectedRegion rgSmall = rgm.getRegion("plotbig" + Integer.toString(plotNumber));
-        ProtectedRegion rgBig = rgm.getRegion("plotsmall" + Integer.toString(plotNumber));
+        ProtectedRegion rgBig = rgm.getRegion("plotbig" + Integer.toString(plotNumber));
+        ProtectedRegion rgSmall = rgm.getRegion("plotsmall" + Integer.toString(plotNumber));
         DefaultDomain dd = new DefaultDomain();
         dd.addPlayer(name.toLowerCase());
-        rgSmall.setMembers(dd);
         rgBig.setMembers(dd);
-        rgm.addRegion(rgBig);
+        rgSmall.setMembers(dd);
         rgm.addRegion(rgSmall);
+        rgm.addRegion(rgBig);
         try {
             rgm.save();
         } catch (StorageException ex) {
@@ -865,7 +865,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         ProtectedPolygonalRegion ppr1 = new ProtectedPolygonalRegion(
                 "plotsmall" + number,
                 bv2dList,
-                glowstoneL.getBlockY(),
+                glowstoneL.getBlockY() - 1,
                 glowstoneL.getBlockY()
         );
 
