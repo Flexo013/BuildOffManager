@@ -1,6 +1,6 @@
 name: BuildOffManager
 main: me.flexo.buildoffmanager.BuildOffManager
-version: 2.0
+version: 2.1
 website: http://www.polygoncraft.net
 description: Manages Build Offs
 author: Flexo013
@@ -14,6 +14,10 @@ commands:
     description: Leave the current Build Off.
     usage: §cThe correct format is /leave
     permission: buildoffmanager.default
+  forceleave:
+    description: Forces a player to leave the current Build Off.
+    usage: §cThe correct format is /forceleave [plot_owner]
+    permission: buildoffmanager.op
   tpplot:
     description: Teleport the player the plot of [plot_owner].
     usage: §cThe correct format is /tpplot [plot_owner]

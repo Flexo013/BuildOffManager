@@ -167,7 +167,8 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             } else {
                 if (BuildOffContestants.contains(sender.getName())) {
                     if (!RunningBuildOff && !AfterBuildOff) {
-                        leaveBuildOff(sender);
+                        leaveBuildOff(sender.getName());
+                        sender.sendMessage(PreFix + ChatColor.GREEN + "You have left the Build Off! You can rejoin by using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
                     } else {
                         sender.sendMessage(PreFix + ChatColor.RED + "You can only leave the Build Off before it starts.");
                     }
@@ -176,6 +177,24 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                 }
             }
             return true;
+        }
+
+        //Forces a player to leave the Build Off
+        if (cmd.getName().equalsIgnoreCase("forceleave")) {
+            if (args.length == 1) {
+                if (BuildOffContestants.contains(args[0])) {
+                    if (!AfterBuildOff) {
+                        leaveBuildOff(args[0]);
+                    } else {
+                        sender.sendMessage(PreFix + ChatColor.RED + "Use /resetplot to remove players after the Build Off.");
+                    }
+                } else {
+                    sender.sendMessage(PreFix + ChatColor.YELLOW + args[0] + ChatColor.RED + " is not enrolled in the Build Off.");
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
 
         // Teleports a player to a plot
@@ -437,12 +456,11 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         updateRegions(sender.getName());
     }
 
-    private void leaveBuildOff(CommandSender sender) {
-        int playerIndex = BuildOffContestants.indexOf(sender.getName());
+    private void leaveBuildOff(String playername) {
+        int playerIndex = BuildOffContestants.indexOf(playername);
         resetPlot(playerIndex);
         removeOneBoardSign(playerIndex);
         BuildOffContestants.set(playerIndex, "");
-        sender.sendMessage(PreFix + ChatColor.GREEN + "You have left the Build Off! You can rejoin by using " + ChatColor.BLUE + "/join" + ChatColor.GREEN + ".");
     }
 
     private void preparePlotSign(CommandSender sender) {
