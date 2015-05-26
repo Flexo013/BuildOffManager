@@ -62,6 +62,10 @@ commands:
     description: Initializes Build Off plots.
     usage: §cThe correct format is /bominit
     permission: buildoffmanager.op
+  expandbo:
+    description: Expands the Build Off with [number] new plots.
+    usage: §cThe correct format is /expandbo [number]
+    permission: buildoffmanager.op
   reloadbom:
     description: Reloads the BuildOffManager config.
     usage: §cThe correct format is /reloadbom

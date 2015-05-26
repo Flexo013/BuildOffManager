@@ -256,6 +256,24 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             sender.sendMessage(PreFix + ChatColor.GREEN + "Initializing Build Off complete!");
             return true;
         }
+        
+        //Creates x more plots
+        if (cmd.getName().equalsIgnoreCase("expandbo")) {
+            if (!(args.length == 1)) {
+                return false;
+            } else {
+                int oldsize = getConfig().getInt("buildoff.maxcontestants");
+                int newAmountOfPlots = Integer.parseInt(args[0]);
+                int newsize = oldsize + newAmountOfPlots;
+                getConfig().set("buildoff.maxcontestants", newsize);
+                saveConfig();
+                for (int i = oldsize; i < newsize; i++) {
+                    initializePlot(i);
+                }
+                sender.sendMessage(PreFix + ChatColor.RED + "Do not forget to manually expand the contestcomplete region!");
+                return true;
+            }
+        }
 
         //Reloads the config
         if (cmd.getName().equalsIgnoreCase("reloadbom")) {
