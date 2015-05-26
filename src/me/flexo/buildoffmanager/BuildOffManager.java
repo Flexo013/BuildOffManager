@@ -78,15 +78,9 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         if (cmd.getName().equalsIgnoreCase("startbuildoff")) {
             return startBuildOff(sender);
         }
-        if (cmd.getName().equalsIgnoreCase("startbo")) {
-            return startBuildOff(sender);
-        }
 
         // Opens a new Build Off so people are allowed to do /join
         if (cmd.getName().equalsIgnoreCase("openbuildoff")) {
-            return openBuildOff(sender);
-        }
-        if (cmd.getName().equalsIgnoreCase("openbo")) {
             return openBuildOff(sender);
         }
 
@@ -94,15 +88,9 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         if (cmd.getName().equalsIgnoreCase("endbuildoff")) {
             return endBuildOff(sender);
         }
-        if (cmd.getName().equalsIgnoreCase("endbo")) {
-            return endBuildOff(sender);
-        }
 
         // Resets the Build Off plots and clear the contestant list
         if (cmd.getName().equalsIgnoreCase("resetbuildoff")) {
-            return resetBuildOff(sender);
-        }
-        if (cmd.getName().equalsIgnoreCase("resetbo")) {
             return resetBuildOff(sender);
         }
 
