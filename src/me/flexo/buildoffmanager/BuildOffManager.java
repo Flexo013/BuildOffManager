@@ -173,6 +173,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                 if (BuildOffContestants.contains(args[0])) {
                     if (!AfterBuildOff) {
                         leaveBuildOff(args[0]);
+                        sender.sendMessage(PreFix + ChatColor.GREEN + "You have forced " + ChatColor.YELLOW + args[0] + ChatColor.GREEN + " to leave the Build Off.");
                     } else {
                         sender.sendMessage(PreFix + ChatColor.RED + "Use /resetplot to remove players after the Build Off.");
                     }
