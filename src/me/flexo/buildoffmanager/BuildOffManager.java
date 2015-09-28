@@ -12,6 +12,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -619,7 +622,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
     }
 
     private void resetPlot(int number) {
-        setPlotBlocks(number);
+        setPlotBlocksAndRemoveArmorStands(number);
 
         //Make sign say [RESET]
         String worldName = getConfig().getString("boardstartblock.world");
@@ -713,7 +716,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         return 0;
     }
 
-    private Location setPlotBlocks(int number) {
+    private Location setPlotBlocksAndRemoveArmorStands(int number) {
         int direction = getConfig().getInt("layout.direction");
         int pathWidth = getConfig().getInt("layout.pathwidth");
         int outerPlotSize = getConfig().getInt("layout.plotsize");
@@ -826,6 +829,12 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         );
         plotSign.getBlock().setType(Material.SIGN_POST);
         plotSign.getBlock().setData(getSignDirection(direction));
+        
+        Cuboid plotCuboid = new Cuboid(bedrockL1,airL2);
+        List<ArmorStand> armorStands = plotCuboid.getArmorStands();
+        for (ArmorStand armorStand : armorStands) {
+            armorStand.remove();
+        }
 
         Sign sign = (Sign) plotSign.getBlock().getState();
         String fancyPlotNumber = (ChatColor.DARK_BLUE + "<" + ChatColor.BLUE + Integer.toString(number + 1) + ChatColor.DARK_BLUE + ">");
@@ -840,7 +849,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         String worldName = getConfig().getString("startblock.world");
         int outerPlotSize = getConfig().getInt("layout.plotsize");
         final int innerPlotSize = outerPlotSize - 2;
-        Location glowstoneL = setPlotBlocks(number);
+        Location glowstoneL = setPlotBlocksAndRemoveArmorStands(number);
 
         RegionManager rgm = WGBukkit.getRegionManager(getServer().getWorld(worldName));
 
