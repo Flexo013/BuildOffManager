@@ -109,22 +109,30 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             return true;
         }
 
-        // Lists all players who are online, coloring them green if they already joined
+        // Lists all players who are online or already enrolled for the Build Off, coloring them green if they already joined
         if (cmd.getName().equalsIgnoreCase("listplayers")) {
-            if (!JoinableBuildOff) {
-                sender.sendMessage(PreFix + ChatColor.GOLD + "Currently nobody can join the Build Off.");
+            if (!JoinableBuildOff && !AfterBuildOff) {
+                sender.sendMessage(PreFix + ChatColor.GOLD + "Currently nobody is enrolled for the Build Off.");
             } else {
                 String playerString;
-                playerString = PreFix + ChatColor.GOLD + "List of online players:" + ChatColor.YELLOW;
+                ArrayList<String> onlinePlayerNames = new ArrayList<>();
+                playerString = PreFix + ChatColor.GOLD + "List of players:";
                 for (Player player : sender.getServer().getOnlinePlayers()) {
                     String playerName = player.getName();
-                    if (BuildOffContestants.contains(playerName)) {
-                        playerString = playerString + " " + ChatColor.GREEN + playerName;
+                    onlinePlayerNames.add(playerName);
+                    if(!BuildOffContestants.contains(playerName)){
+                        playerString = playerString + " " + ChatColor.RED + player.getName();
+                    }
+                }
+                for (String contestant: BuildOffContestants) {
+                    if(!onlinePlayerNames.contains(contestant)){
+                        playerString = playerString + " " + ChatColor.YELLOW + contestant;
                     } else {
-                        playerString = playerString + " " + ChatColor.YELLOW + playerName;
+                        playerString = playerString + " " + ChatColor.GREEN + contestant;
                     }
                 }
                 sender.sendMessage(playerString);
+                sender.sendMessage(PreFix + ChatColor.RED + "Online " + ChatColor.YELLOW + "OfflineContestant " + ChatColor.GREEN + "OnlineContestant");
             }
             return true;
         }
@@ -829,8 +837,8 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         );
         plotSign.getBlock().setType(Material.SIGN_POST);
         plotSign.getBlock().setData(getSignDirection(direction));
-        
-        Cuboid plotCuboid = new Cuboid(bedrockL1,airL2);
+
+        Cuboid plotCuboid = new Cuboid(bedrockL1, airL2);
         List<ArmorStand> armorStands = plotCuboid.getArmorStands();
         for (ArmorStand armorStand : armorStands) {
             armorStand.remove();
