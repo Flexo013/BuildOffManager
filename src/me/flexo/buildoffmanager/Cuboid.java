@@ -1,6 +1,7 @@
 package me.flexo.buildoffmanager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
  
 public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
@@ -104,6 +106,27 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
                         return playerList;
                 } else {
                         return new ArrayList<Player>();
+                }
+        }
+        
+        public List<ArmorStand> getArmorStands() {
+                List<ArmorStand> armorStandList = new ArrayList<ArmorStand>();
+                World world = this.getWorld(true);
+                if (world != null) {
+                        Collection<ArmorStand> worldArmorStands = world.getEntitiesByClass(ArmorStand.class);
+                        for (int x = this.xPos1; x <= this.xPos2; x++) {
+                                for (int y = this.yPos1; y <= this.yPos2; y++) {
+                                        for (int z = this.zPos1; z <= this.zPos2; z++) {
+                                                for (ArmorStand armorStand : worldArmorStands) {
+                                                        Location aLoc = armorStand.getLocation();
+                                                        if ((int) aLoc.getX() == x && (int) aLoc.getY() == y && (int) aLoc.getZ() == z) armorStandList.add(armorStand);
+                                                }
+                                        }
+                                }
+                        }
+                        return armorStandList;
+                } else {
+                        return new ArrayList<ArmorStand>();
                 }
         }
  
