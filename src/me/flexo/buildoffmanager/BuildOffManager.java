@@ -330,7 +330,6 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                 tpToPlot(plotNumber - 1, p);
             }
         }
-
     }
 
     private void tpToPlot(String targetPlotOwner, Player player) {
