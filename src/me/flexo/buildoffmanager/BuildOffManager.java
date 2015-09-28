@@ -770,15 +770,15 @@ public class BuildOffManager extends JavaPlugin implements Listener {
 
         Location grassL1 = new Location(
                 getServer().getWorld(worldName),
-                startX + getX(innerPlotSize + offsetX, direction),
+                startX + getX(1 + innerPlotSize + offsetX, direction),
                 (startY - 1),
-                startZ + getZ(innerPlotSize + offsetZ, direction)
+                startZ + getZ(1 + innerPlotSize + offsetZ, direction)
         );
         Location grassL2 = new Location(
                 getServer().getWorld(worldName),
-                startX + getX(1 + offsetX, direction),
+                startX + getX(offsetX, direction),
                 (startY - 1),
-                startZ + getZ(1 + offsetZ, direction)
+                startZ + getZ(offsetZ, direction)
         );
         setBlocks(grassL1, grassL2, Material.GRASS);
 
