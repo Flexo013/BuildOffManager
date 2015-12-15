@@ -102,9 +102,14 @@ public class BuildOffManager extends JavaPlugin implements Listener {
             if (!(args.length == 1)) {
                 return false;
             } else {
-                int number = Integer.parseInt(args[0]) - 1;
-                resetPlot(number);
-                sender.sendMessage(PreFix + ChatColor.GREEN + "Succesfully regenerated plot " + Integer.toString(number + 1));
+                if (args[0].matches("[0-9]+")) {
+                    int number = Integer.parseInt(args[0]) - 1;
+                    resetPlot(number);
+                    sender.sendMessage(PreFix + ChatColor.GREEN + "Succesfully regenerated plot " + Integer.toString(number + 1));
+                } else {
+                    return false;
+                }
+
             }
             return true;
         }
