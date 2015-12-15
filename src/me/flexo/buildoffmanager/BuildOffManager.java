@@ -848,7 +848,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
         plotSign.getBlock().setType(Material.SIGN_POST);
         plotSign.getBlock().setData(getSignDirection(direction));
 
-        Cuboid plotCuboid = new Cuboid(bedrockL1, airL2);
+        Cuboid plotCuboid = new Cuboid(bedrockL2, airL1);
         List<ArmorStand> armorStands = plotCuboid.getArmorStands();
         for (ArmorStand armorStand : armorStands) {
             armorStand.remove();
