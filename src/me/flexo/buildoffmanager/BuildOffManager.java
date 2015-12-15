@@ -228,7 +228,7 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                         boolean found = false;
                         for (int i = 0; i < BuildOffContestants.size(); i++) {
                             if (targetPlotOwner.equalsIgnoreCase(BuildOffContestants.get(i))) {
-                                tpToPlot(i + 1, player);
+                                tpToPlot(i, player);
                                 found = true;
                             }
                         }
