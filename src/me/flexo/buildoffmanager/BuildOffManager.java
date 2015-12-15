@@ -120,12 +120,12 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                 for (Player player : sender.getServer().getOnlinePlayers()) {
                     String playerName = player.getName();
                     onlinePlayerNames.add(playerName);
-                    if(!BuildOffContestants.contains(playerName)){
+                    if (!BuildOffContestants.contains(playerName)) {
                         playerString = playerString + " " + ChatColor.RED + player.getName();
                     }
                 }
-                for (String contestant: BuildOffContestants) {
-                    if(!onlinePlayerNames.contains(contestant)){
+                for (String contestant : BuildOffContestants) {
+                    if (!onlinePlayerNames.contains(contestant)) {
                         playerString = playerString + " " + ChatColor.YELLOW + contestant;
                     } else {
                         playerString = playerString + " " + ChatColor.GREEN + contestant;
@@ -220,9 +220,14 @@ public class BuildOffManager extends JavaPlugin implements Listener {
                         }
                     } else {
                         String targetPlotOwner = args[0];
-                        if (BuildOffContestants.contains(targetPlotOwner)) {
-                            tpToPlot(targetPlotOwner, player);
-                        } else {
+                        boolean found = false;
+                        for (int i = 0; i < BuildOffContestants.size(); i++) {
+                            if (targetPlotOwner.equalsIgnoreCase(BuildOffContestants.get(i))) {
+                                tpToPlot(i + 1, player);
+                                found = true;
+                            }
+                        }
+                        if (!found) {
                             sender.sendMessage(PreFix + ChatColor.DARK_RED + targetPlotOwner + ChatColor.RED + " is not enrolled for the Build Off. So you cannot be teleported to their plot.");
                         }
                     }
